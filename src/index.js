@@ -1,5 +1,4 @@
 
-import {use, defineAction, defineView, addReducer} from 'epic-linker';
 import runTask from 'alkindi-task-lib';
 
 import Task from './intro';
@@ -13,10 +12,10 @@ import 'rc-tooltip/assets/bootstrap.css';
 import './style.css';
 
 export function run (container, options) {
-   runTask(container, options, TaskBundle);
+  runTask(container, options, TaskBundle);
 };
 
-function* TaskBundle (deps) {
+function TaskBundle (bundle, deps) {
 
   /*** Start of required task definitions ***/
 
@@ -29,19 +28,19 @@ function* TaskBundle (deps) {
   };
 
   /* The 'init' action sets the workspace operations in the global state. */
-  yield addReducer('init', function (state, action) {
+  bundle.addReducer('init', function (state, action) {
     return {...state, workspaceOperations};
   });
 
   /* The 'Task' view displays the task introduction to the contestant. */
-  yield defineView('Task', TaskSelector, Task);
+  bundle.defineView('Task', TaskSelector, Task);
   function TaskSelector (state) {
     const {task} = state;
     return {task};
   }
 
   /* The 'Workspace' view displays the main task view to the contestant. */
-  yield defineView('Workspace', WorkspaceSelector, Workspace(deps));
+  bundle.defineView('Workspace', WorkspaceSelector, Workspace(deps));
   function WorkspaceSelector (state, props) {
     const {score, task, workspace, hintRequest, submitAnswer} = state;
     return {score, task, workspace, hintRequest, submitAnswer: submitAnswer || {}};
@@ -50,7 +49,7 @@ function* TaskBundle (deps) {
   /*** End of required task definitions ***/
 
   /* These are passed to WorkspaceView. */
-  yield use('showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback');
+  bundle.use('showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback');
 
   /* taskInitialized is called to update the global state when the task is first loaded. */
   function taskLoaded (state) {
@@ -110,8 +109,8 @@ function* TaskBundle (deps) {
   }
 
   /* changeSubstitution {index, letter} updates the user substitution accordingly. */
-  yield defineAction('changeSubstitution', 'Workspace.ChangeSubstitution');
-  yield addReducer('changeSubstitution', function substitutionChangeReducer (state, action) {
+  bundle.defineAction('changeSubstitution', 'Workspace.ChangeSubstitution');
+  bundle.addReducer('changeSubstitution', function substitutionChangeReducer (state, action) {
     let {index, letter} = action;
     if(letter !== null && letter !== undefined) {
       letter = letter.toUpperCase();
@@ -127,8 +126,8 @@ function* TaskBundle (deps) {
   });
   
   /* toggleHighlight {index} updates the toggle state accordingly. */
-  yield defineAction('toggleHighlight', 'Workspace.ToggleHighlight');
-  yield addReducer('toggleHighlight', function highlightToggleChangeReducer (state, action) {
+  bundle.defineAction('toggleHighlight', 'Workspace.ToggleHighlight');
+  bundle.addReducer('toggleHighlight', function highlightToggleChangeReducer (state, action) {
     const {index} = action;
     let {workspace} = state;
     let {highlightToggleState} = workspace;
@@ -144,8 +143,8 @@ function* TaskBundle (deps) {
   });
 
   /* changeBigramHighlight {index, charType, value} updates the bigram state accordingly. */
-  yield defineAction('changeBigramHighlight', 'Workspace.ChangeBigramHighlight');
-  yield addReducer('changeBigramHighlight', function bigramHighlightChangeReducer (state, action) {
+  bundle.defineAction('changeBigramHighlight', 'Workspace.ChangeBigramHighlight');
+  bundle.addReducer('changeBigramHighlight', function bigramHighlightChangeReducer (state, action) {
     const {index, charType} = action;
     let {value} = action;
     value = value.toUpperCase();
@@ -184,8 +183,8 @@ function* TaskBundle (deps) {
   });
 
   /* search {forward, bigrams} finds the next or previous match. */
-  yield defineAction('onSearch', 'Workspace.OnSearch');
-  yield addReducer('onSearch', function searchChangeReducer (state, action) {
+  bundle.defineAction('onSearch', 'Workspace.OnSearch');
+  bundle.addReducer('onSearch', function searchChangeReducer (state, action) {
     const {forward, bigrams} = action;
     let {workspace} = state;
     const {task} = state;
