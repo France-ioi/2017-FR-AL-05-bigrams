@@ -4,11 +4,19 @@ export function symbolToDisplayString(symbol) {
   return ('0000' + symbol).slice(-SYMBOL_DIGITS);
 };
 
+export function symbolsToDisplayString(symbols) {
+  return symbols.map(symbolToDisplayString).join("");
+};
+
 export function letterToDisplayString(letter) {
   if(letter === null || letter === undefined || letter === "") {
     return "?";
   }
   return letter;
+};
+
+export function symbolsToDisplayLetters(substitution, symbols) {
+  return symbols.map(symbol => letterToDisplayString(substitution[symbol].letter)).join("");
 };
 
 export function letterToEditString(letter) {
@@ -106,65 +114,89 @@ const compareAnalysisCounts = function(object1, object2) {
   return object2.count - object1.count;
 };
 
-export function analyzeSymbols(cipherText) {
-  const counts = [];
-  const beforeCounts = [];
-  const afterCounts = [];
-  for(let index = 0; index < NUM_SYMBOLS; index++) {
-    counts.push(0);
-    beforeCounts.push({});
-    afterCounts.push({});
-  }
-  function incrementSideCount(array, anchor, other) {
-    if(!array[anchor][other]) {
-      array[anchor][other] = 0;
+export function analyzeAuxiliary(cipherText, bigrams) {
+  const info = {};
+  function incrementMainCount(symbolArray) {
+    const keyString = symbolsToDisplayString(symbolArray);
+    if(!info[keyString]) {
+      info[keyString] = {
+        symbolArray: symbolArray,
+        count: 0,
+        before: {},
+        after: {}
+      };
     }
-    array[anchor][other]++;
+    info[keyString].count++;
   }
+  function incrementAdjacentCount(symbolArray, otherSymbol, side) {
+    const keyString = symbolsToDisplayString(symbolArray);
+    const sideObject = info[keyString][side];
+    if(!sideObject[otherSymbol]) {
+      sideObject[otherSymbol] = {
+        count: 0
+      };
+    }
+    sideObject[otherSymbol].count++;
+  }
+
   for(let index = 0; index < cipherText.length; index++) {
-    counts[cipherText[index]]++;
-    if(index > 0) {
-      incrementSideCount(beforeCounts, cipherText[index], cipherText[index - 1]);
+    if(bigrams && index === cipherText.length - 1) {
+      break;
     }
-    if(index < cipherText.length - 1) {
-      incrementSideCount(afterCounts, cipherText[index], cipherText[index + 1]);
+
+    const symbolArray = [cipherText[index]];
+    if(bigrams) {
+      symbolArray.push(cipherText[index + 1]);
+    }
+
+    const indexBefore = index - 1;
+    let indexAfter = index + 1;
+    if(bigrams) {
+      indexAfter = index + 2;
+    }
+
+    incrementMainCount(symbolArray);
+    if(indexBefore >= 0) {
+      incrementAdjacentCount(symbolArray, cipherText[indexBefore], "before");
+    }
+    if(indexAfter < cipherText.length) {
+      incrementAdjacentCount(symbolArray, cipherText[indexAfter], "after");
     }
   }
 
-  const symbolsResult = [];
-  for(let index = 0; index < NUM_SYMBOLS; index++) {
-    if(counts[index] === 0) {
-      continue;
-    }
+  const result = [];
+  for(let keyString in info) {
+    const infoObject = info[keyString];
     const beforeArray = [];
     const afterArray = [];
-    for(let other in beforeCounts[index]) {
+    for(let otherSymbol in infoObject.before) {
       beforeArray.push({
-        symbol: other,
-        count: beforeCounts[index][other]
+        symbolArray: [otherSymbol],
+        count: infoObject.before[otherSymbol].count
       });
     }
-    for(let other in afterCounts[index]) {
+    for(let otherSymbol in infoObject.after) {
       afterArray.push({
-        symbol: other,
-        count: afterCounts[index][other]
+        symbolArray: [otherSymbol],
+        count: infoObject.after[otherSymbol].count
       });
     }
     beforeArray.sort(compareAnalysisCounts);
     afterArray.sort(compareAnalysisCounts);
-    symbolsResult.push({
-      symbol: index,
-      count: counts[index],
+    result.push({
+      symbolArray: infoObject.symbolArray,
+      count: infoObject.count,
       before: beforeArray,
       after: afterArray
     });
   }
-  symbolsResult.sort(compareAnalysisCounts);
-  return symbolsResult;
+  result.sort(compareAnalysisCounts);
+  return result;
 };
 
 export function analyze(cipherText) {
   return {
-    symbols: analyzeSymbols(cipherText)
+    symbols: analyzeAuxiliary(cipherText, false),
+    bigrams: analyzeAuxiliary(cipherText, true)
   };
 };
