@@ -24,7 +24,6 @@ const SubstitutionEditCharPair = EpicComponent(self => {
         <div className={classnames(["substitutionEditSymbol", "pairTop"])} onClick={onClick}>
           {symbol}
         </div>
-        <br/>
         <div className={classnames(["substitutionEditLetter", "pairBottom"])}>
           <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onChange} onFocus={onFocus} onClick={onFocus} />
         </div>

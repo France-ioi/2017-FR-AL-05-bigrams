@@ -14,7 +14,6 @@ const CipherTextCharPair = EpicComponent(self => {
         <div className={classnames(["cipherTextSymbol", "pairTop"])}>
           {symbol}
         </div>
-        <br/>
         <div className={classnames(["cipherTextLetter", "pairBottom"])}>
           {letter}
         </div>

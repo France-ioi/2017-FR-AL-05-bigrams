@@ -24,6 +24,77 @@
     padding-top: 30px;
     position: relative;
 }
+
+.panel-heading {
+  font-family: "Lucida Console", Monaco, monospace;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+/*
+
+    Task Header
+
+*/
+.submitBlock, .scoreBlock, .feedbackBlock, .saveBlock {
+    display: inline-block;
+    line-height: 34px;
+    margin: 0 10px 0 0;
+}
+.scoreBlock, .feedbackBlock {
+    background: #f8f8f8;
+    padding: 0 8px;
+}
+.feedbackBlock {
+    cursor: pointer;
+}
+
+/*
+
+    Tools generic elements
+
+*/
+.toolDescription {
+    margin-bottom: 10px;
+}
+.charPair {
+    display: inline-block;
+    text-align: center;
+    font-family: "Lucida Console", Monaco, monospace;
+    font-size: 16px;
+    font-weight: bold;
+}
+.pairTop {
+    border: 1px solid #ccc;
+    padding: 4px 3px;
+}
+
+/*
+
+    Tool Text
+
+*/
+.cipherTextCharPair {
+    margin-bottom: 10px;
+    margin-right: 2px;
+}
+
+.cipherTextBox {
+    overflow-y: scroll;
+    border: 1px solid #333;
+    padding: 5px;
+}
+.cipherTextView .cipherTextLetter {
+    line-height: 30px;
+}
+/*
+
+    Tool Substitution and Hints
+
+*/
+.substitutionView {
+    position: relative;
+}
 .hintsDialog {
   width: 50%;
   max-width: 400px;
@@ -42,37 +113,7 @@
 .hintsDialog button + button {
     margin-left: 10px;
 }
-.taskHeader {
 
-}
-.submitBlock, .scoreBlock, .feedbackBlock, .saveBlock {
-    display: inline-block;
-    line-height: 34px;
-    margin: 0 10px 0 0;
-}
-.taskHeader > *:last-child {
-    margin: 0;
-}
-.scoreBlock, .feedbackBlock {
-    background: #f8f8f8;
-    padding: 0 8px;
-}
-.feedbackBlock {
-    cursor: pointer;
-}
-.toolHeader {
-}
-.toolDescription {
-
-}
-.cipherTextBox {
-    overflow-y: scroll;
-}
-.charPair {
-    display: inline-block;
-    width: 20px;
-    text-align: center;
-}
 .highlightButton {
     width: 18px;
     height: 20px;
@@ -81,12 +122,16 @@
 .highlightButtonSelected, .highlightButtonSelected:focus, .highlightButtonSelected:hover {
     background-color: lightblue;
 }
-.pairTop, .pairBottom {
-    display: inline;
-}
+
 .substitutionBox {
     width: 400px;
 }
+
+/*
+
+    Tool Search and Highlight
+
+*/
 .highlightToggleBox {
     width: 600px;
 }
@@ -94,7 +139,7 @@
     width: 20px;
     max-width: 20px;
 }
-.pairHighlightedToggle {
+.pairHighlightedToggle  {
     background-color: lightgreen;
 }
 .pairHighlightedBigram {
