@@ -79,34 +79,36 @@ export const HighlightAndSearch = EpicComponent(self => {
   self.render = function() {
     const {substitution, onHighlightToggle, highlightToggleState, highlightBigrams, onBigramSymbolChange, onBigramLetterChange, onClickSearch} = self.props;
     return (
-      <div className="highlightView">
-        <div className="toolHeader">
+      <div className="panel panel-default highlightView">
+        <div className="panel-heading toolHeader">
           Search and highlighting
         </div>
-        <div className="toolDescription">
-          Highlight or search symbols (click to toggle):
+        <div className="panel-body">
+          <div className="toolDescription">
+            Highlight or search symbols (click to toggle):
+          </div>
+          <div className="highlightToggleBox">
+            {substitution.map(function(subObject, index) {
+              const symbol = symbolToDisplayString(index);
+              return <HighlightTogglePair key={index} symbol={symbol} index={index} onClick={onHighlightToggle} isHighlighted={highlightToggleState[index]} />;
+            })}
+          </div>
+          <Search onClick={onClickSearch} bigrams={false} />
+          <div className="highlightBigramsBox">
+            Highlight or search up to {NUM_BIGRAMS_SEARCH} bigrams:
+            <br/>
+            By symbols:
+            {highlightBigrams.arrays.symbols.map(function(value, index) {
+              return <HighlightBigramSymbol key={index} index={index} value={value} onChange={onBigramSymbolChange} />
+            })}
+            <br/>
+            By decoded letters:
+            {highlightBigrams.arrays.letters.map(function(value, index) {
+              return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
+            })}
+          </div>
+          <Search onClick={onClickSearch} bigrams={true} />
         </div>
-        <div className="highlightToggleBox">
-          {substitution.map(function(subObject, index) {
-            const symbol = symbolToDisplayString(index);
-            return <HighlightTogglePair key={index} symbol={symbol} index={index} onClick={onHighlightToggle} isHighlighted={highlightToggleState[index]} />;
-          })}
-        </div>
-        <Search onClick={onClickSearch} bigrams={false} />
-        <div className="highlightBigramsBox">
-          Highlight or search up to {NUM_BIGRAMS_SEARCH} bigrams:
-          <br/>
-          By symbols:
-          {highlightBigrams.arrays.symbols.map(function(value, index) {
-            return <HighlightBigramSymbol key={index} index={index} value={value} onChange={onBigramSymbolChange} />
-          })}
-          <br/>
-          By decoded letters:
-          {highlightBigrams.arrays.letters.map(function(value, index) {
-            return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
-          })}
-        </div>
-        <Search onClick={onClickSearch} bigrams={true} />
       </div>
     );
   };

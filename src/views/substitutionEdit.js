@@ -37,19 +37,21 @@ export const SubstitutionEdit = EpicComponent(self => {
   self.render = function() {
     const {substitution, onChange, onRequestHint} = self.props;
     return (
-      <div className="substitutionView">
-        <div className="toolHeader">
+      <div className="panel panel-default substitutionView">
+        <div className="panel-heading toolHeader">
           Substitution edition and hints
         </div>
-        <div className="toolDescription">
-          Click on a symbol to edit the corresponding letter or obtain a hint.
-        </div>
-        <div className="substitutionBox">
-          {substitution.map(function(subObject, index) {
-            const letter = letterToEditString(subObject.letter);
-            const symbol = symbolToDisplayString(index);
-            return <SubstitutionEditCharPair key={index} letter={letter} symbol={symbol} index={index} onChange={onChange} onRequestHint={onRequestHint} />;
-          })}
+        <div className="panel-body">
+          <div className="toolDescription">
+            Click on a symbol to edit the corresponding letter or obtain a hint.
+          </div>
+          <div className="substitutionBox">
+            {substitution.map(function(subObject, index) {
+              const letter = letterToEditString(subObject.letter);
+              const symbol = symbolToDisplayString(index);
+              return <SubstitutionEditCharPair key={index} letter={letter} symbol={symbol} index={index} onChange={onChange} onRequestHint={onRequestHint} />;
+            })}
+          </div>
         </div>
       </div>
     );

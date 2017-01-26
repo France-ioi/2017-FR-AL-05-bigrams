@@ -62,21 +62,23 @@ export const CipherTextView = EpicComponent(self => {
   self.render = function() {
     const {cipherText, substitution, highlightToggleState} = self.props;
     return (
-      <div className="cipherTextView">
-        <div className="toolHeader">
-          Encrypted text and decryption attempt
+      <div className="panel panel-default cipherTextView">
+        <div className="panel-heading toolHeader">
+          {"Encrypted text and decryption attempt"}
         </div>
-        <div className="toolDescription">
-          Here is the text to decrypt. Your solution attempt is represented as letters under each {SYMBOL_DIGITS} digit symobl.
-        </div>
-        <div className="cipherTextBox">
-          {cipherText.map(function(symbol, index) {
-            const letter = letterToDisplayString(substitution[symbol].letter);
-            const displaySymbol = symbolToDisplayString(symbol);
-            const isHighlightedBigram = checkHighlightedBigram(index);
-            const isSearched = checkSearched(index);
-            return <CipherTextCharPair key={index} symbol={displaySymbol} letter={letter} isHighlightedToggle={highlightToggleState[symbol]} isHighlightedBigram={isHighlightedBigram} isSearched={isSearched} />;
-          })}
+        <div className="panel-body">
+          <div className="toolDescription">
+            Here is the text to decrypt. Your solution attempt is represented as letters under each {SYMBOL_DIGITS} digit symobl.
+          </div>
+          <div className="cipherTextBox">
+            {cipherText.map(function(symbol, index) {
+              const letter = letterToDisplayString(substitution[symbol].letter);
+              const displaySymbol = symbolToDisplayString(symbol);
+              const isHighlightedBigram = checkHighlightedBigram(index);
+              const isSearched = checkSearched(index);
+              return <CipherTextCharPair key={index} symbol={displaySymbol} letter={letter} isHighlightedToggle={highlightToggleState[symbol]} isHighlightedBigram={isHighlightedBigram} isSearched={isSearched} />;
+            })}
+          </div>
         </div>
       </div>
     );

@@ -43,45 +43,47 @@ export const Analysis = EpicComponent(self => {
     const {substitution, analysis} = self.props;
     const {selectedMode} = self.state;
     return (
-      <div className="analysisView">
-        <div className="toolHeader">
-          Analysis
+      <div className="panel panel-default analysisView">
+        <div className="panel-heading toolHeader">
+          {"Analysis"}
         </div>
-        <div className="analysisChoiceContainer">
-          <select onChange={onChange} value={selectedMode}>
-            <option value="symbols">Single symbols</option>
-            <option value="bigrams">Bigrams</option>
-          </select>
-        </div>
-        <div className="analysisBox">
-          <table>
-            <tbody>
-              <tr>
-                <td>
-                  Most frequent symbols before:
-                </td>
-                <td></td>
-                <td>
-                  Most frequent symbols after:
-                </td>
-              </tr>
-              {analysis[selectedMode].map(function(symbolAnalysis, index) {
-                return (
-                  <tr key={index}>
-                    <td>
-                      <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
-                    </td>
-                    <td>
-                      <AnalysisTriplet symbols={symbolAnalysis.symbolArray} count={symbolAnalysis.count} text={symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray)} />
-                    </td>
-                    <td>
-                      <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+        <div className="panel-body">
+          <div className="analysisChoiceContainer">
+            <select onChange={onChange} value={selectedMode}>
+              <option value="symbols">Single symbols</option>
+              <option value="bigrams">Bigrams</option>
+            </select>
+          </div>
+          <div className="analysisBox">
+            <table>
+              <tbody>
+                <tr>
+                  <td>
+                    Most frequent symbols before:
+                  </td>
+                  <td></td>
+                  <td>
+                    Most frequent symbols after:
+                  </td>
+                </tr>
+                {analysis[selectedMode].map(function(symbolAnalysis, index) {
+                  return (
+                    <tr key={index}>
+                      <td>
+                        <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
+                      </td>
+                      <td>
+                        <AnalysisTriplet symbols={symbolAnalysis.symbolArray} count={symbolAnalysis.count} text={symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray)} />
+                      </td>
+                      <td>
+                        <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     );
