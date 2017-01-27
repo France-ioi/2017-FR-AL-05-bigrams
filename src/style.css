@@ -24,6 +24,12 @@
     padding-top: 30px;
     position: relative;
 }
+label {
+    font-weight: normal;
+}
+button + button {
+    margin-left: 3px;
+}
 
 .panel-heading {
   font-family: "Lucida Console", Monaco, monospace;
