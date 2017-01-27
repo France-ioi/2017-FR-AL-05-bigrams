@@ -11,11 +11,14 @@ const HighlightTogglePair = EpicComponent(self => {
     self.props.onClick(self.props.index);
   };
   self.render = function() {
-    const {symbol, isHighlighted} = self.props;
+    const {symbol, letter, isHighlighted} = self.props;
     return (
-      <div className={classnames(["highlightCharPair", "charPair"])}>
-        <div className={classnames(["highlightSymbol", isHighlighted && "highlightSynmbolSelected"])} onClick={onClick}>
+      <div className={classnames(["highlightCharPair", "charPair", isHighlighted && "highlightCharPairSelected"])} onClick={onClick}>
+        <div className={classnames(["highlightSymbol", "pairTop"])}>
           {symbol}
+        </div>
+        <div className={classnames(["highlightLetter", "pairBottom"])}>
+          {letter}
         </div>
       </div>
     );
@@ -90,7 +93,8 @@ export const HighlightAndSearch = EpicComponent(self => {
             <div className="highlightToggleBox">
               {substitution.map(function(subObject, index) {
                 const symbol = symbolToDisplayString(index);
-                return <HighlightTogglePair key={index} symbol={symbol} index={index} onClick={onHighlightToggle} isHighlighted={highlightToggleState[index]} />;
+                const letter = letterToDisplayString(index.letter);
+                return <HighlightTogglePair key={index} symbol={symbol} letter={letter} index={index} onClick={onHighlightToggle} isHighlighted={highlightToggleState[index]} />;
               })}
             </div>
             <Search onClick={onClickSearch} bigrams={false} />

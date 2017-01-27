@@ -137,9 +137,6 @@ button + button {
     height: 20px;
     padding: 0px;
 }
-.highlightButtonSelected, .highlightButtonSelected:focus, .highlightButtonSelected:hover {
-    background-color: lightblue;
-}
 
 .substitutionBox {
     width: 520px;
@@ -177,7 +174,16 @@ button + button {
     display: table-cell;
     vertical-align: top;
 }
-.highlightSynmbolSelected {background-color: #ccf;}
+.highlightCharPair {
+    border: 1px solid #ccc;
+    margin-right: 2px;
+    margin-bottom: 3px;
+    padding: 4px 3px;
+    cursor: pointer;
+}
+.highlightCharPairSelected {
+    background-color: #ccf;
+}
 .pairHighlightedToggle  {
     background-color: lightgreen;
 }
@@ -194,11 +200,6 @@ button + button {
 }
 .highlightBigramLetterDiv input {
     width: 30px;
-}
-.highlightSymbol {
-    cursor: pointer;
-    border: 1px solid #ccc;
-    padding: 4px 3px;
 }
 .searchDiv {
     display: inline-block;
