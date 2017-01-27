@@ -61,11 +61,16 @@ export const Search = EpicComponent(self => {
   };
   self.render = function() {
     return (
-      <div className="searchDiv">
-        Search in text:
-        <br/>
-        <Button onClick={onClickPrevious}>Previous</Button>
-        <Button onClick={onClickNext}>Next</Button>
+      <div>
+        <div className="searchDiv">
+          Search in text:
+          <br/>
+          <Button onClick={onClickPrevious}>Previous</Button>
+          <Button onClick={onClickNext}>Next</Button>
+        </div>
+        <div className="applyFiltersDiv">
+          <label><input type="checkbox"/> Apply filter in analysis tool</label>
+        </div>
       </div>
     );
   };
