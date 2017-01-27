@@ -71,9 +71,9 @@ export const SubstitutionEdit = EpicComponent(self => {
         </div>
         <div className="panel-body">
           {hintRequest && renderHintRequest()}
-          <div className="toolDescription">
+          <p className="toolDescription">
             Click on a symbol to edit the corresponding letter or obtain a hint.
-          </div>
+          </p>
           <div className="substitutionBox">
             {substitution.map(function(subObject, index) {
               const letter = letterToEditString(subObject.letter);

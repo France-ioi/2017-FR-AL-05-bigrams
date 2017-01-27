@@ -66,9 +66,9 @@ export const CipherTextView = EpicComponent(self => {
           {"Encrypted text and decryption attempt"}
         </div>
         <div className="panel-body">
-          <div className="toolDescription">
+          <p className="toolDescription">
             Here is the text to decrypt. Your solution attempt is represented as letters under each {SYMBOL_DIGITS} digit symobl.
-          </div>
+          </p>
           <div className="cipherTextBox">
             {cipherText.map(function(symbol, index) {
               const letter = letterToDisplayString(substitution[symbol].letter);
