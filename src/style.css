@@ -106,7 +106,7 @@ button + button {
     position: relative;
 }
 .hintsDialog {
-  width: 40%;
+  width: 200px;
   max-width: 400px;
   background: #f0f0f0;
   border: 1px solid black;
@@ -134,7 +134,7 @@ button + button {
 }
 
 .substitutionBox {
-    width: 400px;
+    width: 520px;
 }
 .substitutionEditCharPair {
     margin-bottom: 3px;
@@ -151,6 +151,7 @@ button + button {
 .substitutionLetterInput {
     width: 28px;
     text-align: center;
+    margin-top: 1px;
 }
 /*
 
