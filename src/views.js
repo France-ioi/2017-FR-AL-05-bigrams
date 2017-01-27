@@ -82,10 +82,10 @@ export const Workspace = actions => EpicComponent(self => {
         <div className="taskInstructions">
           <p>[Instructions]</p>
         </div>
-        <CipherTextView cipherText={cipherText} substitution={substitution} highlightToggleState={highlightToggleState} highlightBigrams={highlightBigrams} searchIndex={searchIndex} searchBigrams={searchBigrams} />
         <SubstitutionEdit substitution={substitution} onChange={onSubstitutionChange}
           onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest} onRequestHint={onRequestHint}
           hintRequest={hintRequest} hints={hints} />
+        <CipherTextView cipherText={cipherText} substitution={substitution} highlightToggleState={highlightToggleState} highlightBigrams={highlightBigrams} searchIndex={searchIndex} searchBigrams={searchBigrams} />
         <HighlightAndSearch
           substitution={substitution}
           onHighlightToggle={onHighlightToggle}
