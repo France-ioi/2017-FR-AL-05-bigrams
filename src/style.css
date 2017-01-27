@@ -74,6 +74,14 @@ button + button {
 .toolDescription {
     font-weight: bold;
 }
+.charPair-labels {
+    font-family: Arial, sans-serif;
+    display: inline-block;
+    line-height: 22px;
+    color: #666;
+    text-align: right;
+    padding-right: 10px;
+}
 /*
 
     Tool Text
@@ -215,27 +223,49 @@ button + button {
     height: 300px;
     overflow-y: scroll;
 }
-.analysisSmallBox {
-    border: 1px solid black;
-    padding: 3px;
-}
 .analysisBox td {
     padding: 5px 0;
 }
-.analysisBox td:first-child {
+td.analysisBox-labels {
+    vertical-align: top;
+    width: 40px;
+    padding-top: 8px;
+}
+.analysisBox-before {
     text-align: right;
+}
+.analysisBox-center {
+    width: 40px;
+}
+.analysisBox-before,
+.analysisBox-after {
+    width: 310px;
 }
 .analysisTriplet {
     display: inline-block;
     text-align: center;
+}
+.analysisBox-center .analysisTriplet {
     margin-right: 10px;
     margin-left: 10px;
-    width: 2em;
+}
+.analysisSmallBox {
+    border: 1px solid black;
+    padding: 3px;
+    height: 70px;
 }
 .analysisSmallBox .analysisTriplet {
-    margin-right: 3px;
-    margin-left: 3px;
+    width: 25px;
 }
 .analysisCharPair {
     border: 1px solid #ccc;
+    padding: 0 2px;
+}
+.analysisSmallBox .analysisTriplet {
+    margin: 0;
+}
+.analysisSmallBox .analysisCharPair {
+    font-size: 14px;
+    font-weight: normal;
+    padding: 0 2px;
 }

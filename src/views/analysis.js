@@ -11,7 +11,7 @@ const AnalysisTriplet = EpicComponent(self => {
     const displaySymbols = symbolsToDisplayString(symbols);
     return (
       <div className="analysisTriplet">
-        <div className="analysisCharPair">
+        <div className="analysisCharPair charPair">
           <div className="pairTop">{displaySymbols}</div>
           <div className="pairBotton">{text}</div>
         </div>
@@ -58,6 +58,7 @@ export const Analysis = EpicComponent(self => {
             <table>
               <tbody>
                 <tr>
+                  <td></td>
                   <td>
                     Most frequent symbols before:
                   </td>
@@ -69,13 +70,19 @@ export const Analysis = EpicComponent(self => {
                 {analysis[selectedMode].map(function(symbolAnalysis, index) {
                   return (
                     <tr key={index}>
-                      <td>
+                      <td className="analysisBox-labels">
+                        <div className="charPair-labels">
+                          <div className="charPair-label-symb">{"Chiffré"}</div>
+                          <div className="charPair-label-letter">{"Clair"}</div>
+                        </div>
+                      </td>
+                      <td className="analysisBox-before">
                         <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
                       </td>
-                      <td>
+                      <td className="analysisBox-center">
                         <AnalysisTriplet symbols={symbolAnalysis.symbolArray} count={symbolAnalysis.count} text={symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray)} />
                       </td>
-                      <td>
+                      <td className="analysisBox-after">
                         <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />
                       </td>
                     </tr>
