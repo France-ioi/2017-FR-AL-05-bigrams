@@ -68,7 +68,9 @@
     border: 1px solid #ccc;
     padding: 4px 3px;
 }
-
+.toolDescription {
+    font-weight: bold;
+}
 /*
 
     Tool Text
@@ -132,13 +134,18 @@
     Tool Search and Highlight
 
 */
-.highlightToggleBox {
+.symbolHighlightSearch,
+.bigramsHighlightSearch {
+    display: table;
+    margin-bottom: 10px;
+}
+.highlightToggleBox,
+.highlightBigramsBox {
     width: 600px;
+    display: table-cell;
+    vertical-align: top;
 }
-.substitutionLetterInput {
-    width: 20px;
-    max-width: 20px;
-}
+.highlightSynmbolSelected {background-color: #ccf;}
 .pairHighlightedToggle  {
     background-color: lightgreen;
 }
@@ -148,9 +155,18 @@
 .highlightBigramSymbolDiv, .highlightBigramLetterDiv {
     width: 50px;
     display: inline-block;
+    text-align: center;
 }
-.highlightBigramSymbolDiv input, .highlightBigramLetterDiv input {
+.highlightBigramSymbolDiv input {
     width: 40px;
+}
+.highlightBigramLetterDiv input {
+    width: 30px;
+}
+.highlightSymbol {
+    cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 4px 3px;
 }
 .searchDiv {
     display: inline-block;
@@ -158,6 +174,14 @@
 .isSearched {
     border: 2px solid red;
 }
+.bigramsHighlightSearch .toolLabel {
+    display: inline-block;
+    width: 12em;
+}
+.highlightBigramSymbolDiv {
+    margin-bottom: 3px;
+}
+
 .analysisTriplet {
     display: inline-block;
     margin-left: 8px;
