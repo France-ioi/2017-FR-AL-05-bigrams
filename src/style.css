@@ -99,18 +99,18 @@
     Tool Substitution and Hints
 
 */
-.substitutionView {
+.substitutionView .panel-body {
     position: relative;
 }
 .hintsDialog {
-  width: 50%;
+  width: 40%;
   max-width: 400px;
   background: #f0f0f0;
   border: 1px solid black;
   border-radius: 3px;
   padding: 5px;
   position: absolute;
-  bottom: 15px;
+  top: 15px;
   right: 15px;
   z-index: 1;
 }
@@ -133,7 +133,19 @@
 .substitutionBox {
     width: 400px;
 }
-
+.substitutionEditCharPair {
+    margin-bottom: 3px;
+    margin-right: 2px;
+}
+.substitutionEditSymbol {
+    cursor: pointer;
+}
+.substitutionEditLetter {
+    text-align: center;
+}
+.substitutionLetterInput {
+    width: 28px;
+}
 /*
 
     Tool Search and Highlight
