@@ -47,7 +47,7 @@ export const Workspace = actions => EpicComponent(self => {
   self.render = function () {
     const {task, workspace, score, hintRequest, submitAnswer} = self.props;
     const {substitution, highlightToggleState, highlightBigrams, searchIndex, searchBigrams, analysis} = workspace;
-    const {cipherText, numSymbols} = task;
+    const {cipherText, numSymbols, hints} = task;
     return (
       <div className="taskWrapper">
         {/*<pre>{JSON.stringify(submitAnswer, null, 2)}</pre>*/}
@@ -81,10 +81,11 @@ export const Workspace = actions => EpicComponent(self => {
             : <Alert bsStyle='error'>{"Votre réponse n'a pas pu être prise en compte."}</Alert>)}
         <div className="taskInstructions">
           <p>[Instructions]</p>
-          {hintRequest && renderHintRequest()}
         </div>
         <CipherTextView cipherText={cipherText} substitution={substitution} highlightToggleState={highlightToggleState} highlightBigrams={highlightBigrams} searchIndex={searchIndex} searchBigrams={searchBigrams} />
-        <SubstitutionEdit substitution={substitution} onChange={onSubstitutionChange} onRequestHint={onShowHintRequest} />
+        <SubstitutionEdit substitution={substitution} onChange={onSubstitutionChange}
+          onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest} onRequestHint={onRequestHint}
+          hintRequest={hintRequest} hints={hints} />
         <HighlightAndSearch
           substitution={substitution}
           onHighlightToggle={onHighlightToggle}
@@ -121,32 +122,5 @@ export const Workspace = actions => EpicComponent(self => {
   const onCloseHintRequest = function () {
     self.props.dispatch({type: actions.showHintRequest, request: null});
   };
-
-  function renderHintRequest () {
-    const allowHints = true;
-    if (!allowHints) {
-      <div className="hintsDialog">
-        <p><strong>{"Les indices seront bientôt disponibles."}</strong></p>
-        <p className="text-center">
-          <Button onClick={onCloseHintRequest}>{"Annuler"}</Button>
-        </p>
-      </div>
-    }
-    const maximumScore = 150;
-    const hintCost = 20;
-    const {task, hintRequest} = self.props;
-    const highestPossibleScore = Math.max(0, maximumScore - Object.keys(task.hints).length * hintCost);
-    return (
-      <div className="hintsDialog">
-        <p><strong>{"Indice demandé : "}</strong>{"Valeur pour la position "}<strong>{hintRequest.index}</strong></p>
-        <p><strong>{"Coût : "}</strong> {hintCost}</p>
-        <p><strong>{"Score disponible : "}</strong>{highestPossibleScore}</p>
-        <p className="text-center">
-          <Button onClick={onRequestHint}>{"Valider"}</Button>
-          <Button onClick={onCloseHintRequest}>{"Annuler"}</Button>
-        </p>
-      </div>
-    );
-  }
 
 }, {displayName: 'View'});
