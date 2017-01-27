@@ -11,10 +11,10 @@ const AnalysisTriplet = EpicComponent(self => {
     const displaySymbols = symbolsToDisplayString(symbols);
     return (
       <div className="analysisTriplet">
-        {displaySymbols}
-        <br/>
-        {text}
-        <br/>
+        <div className="analysisCharPair">
+          <div className="pairTop">{displaySymbols}</div>
+          <div className="pairBotton">{text}</div>
+        </div>
         {count}x
       </div>
     );

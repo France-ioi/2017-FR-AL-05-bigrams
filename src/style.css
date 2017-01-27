@@ -64,10 +64,7 @@
     font-size: 16px;
     font-weight: bold;
 }
-.pairTop {
-    border: 1px solid #ccc;
-    padding: 4px 3px;
-}
+
 .toolDescription {
     font-weight: bold;
 }
@@ -76,15 +73,18 @@
     Tool Text
 
 */
-.cipherTextCharPair {
-    margin-bottom: 10px;
-    margin-right: 2px;
-}
-
 .cipherTextBox {
     overflow-y: scroll;
     border: 1px solid #333;
     padding: 5px;
+}
+.cipherTextCharPair {
+    margin-bottom: 10px;
+    margin-right: 2px;
+}
+.cipherTextCharPair .pairTop {
+    border: 1px solid #ccc;
+    padding: 4px 3px;
 }
 .cipherTextView .cipherTextSymbol,
 .cipherTextView .cipherTextLetter {
@@ -137,14 +137,17 @@
     margin-bottom: 3px;
     margin-right: 2px;
 }
-.substitutionEditSymbol {
+.substitutionEditSymbol.pairTop {
     cursor: pointer;
+    border: 1px solid #ccc;
+    padding: 4px 3px;
 }
 .substitutionEditLetter {
     text-align: center;
 }
 .substitutionLetterInput {
     width: 28px;
+    text-align: center;
 }
 /*
 
@@ -199,21 +202,36 @@
     margin-bottom: 3px;
 }
 
-.analysisTriplet {
-    display: inline-block;
-    margin-left: 8px;
-    margin-right: 8px;
-    text-align: center;
-}
-.analysisSmallBox {
-    display: inline-block;
-    border: 1px solid black;
-    width: 200px;
-    height: 60px;
-    margin-top: 10px;
-}
+/*
+
+    Tool Analysis
+
+*/
 .analysisBox {
     height: 300px;
     overflow-y: scroll;
-    margin-bottom: 40px;
+}
+.analysisSmallBox {
+    border: 1px solid black;
+    padding: 3px;
+}
+.analysisBox td {
+    padding: 5px 0;
+}
+.analysisBox td:first-child {
+    text-align: right;
+}
+.analysisTriplet {
+    display: inline-block;
+    text-align: center;
+    margin-right: 10px;
+    margin-left: 10px;
+    width: 2em;
+}
+.analysisSmallBox .analysisTriplet {
+    margin-right: 3px;
+    margin-left: 3px;
+}
+.analysisCharPair {
+    border: 1px solid #ccc;
 }
