@@ -14,12 +14,8 @@ const HighlightTogglePair = EpicComponent(self => {
     const {symbol, isHighlighted} = self.props;
     return (
       <div className={classnames(["highlightCharPair", "charPair"])}>
-        <div className={classnames(["highlightSymbol", "pairTop"])} onClick={onClick}>
+        <div className={classnames(["highlightSymbol", isHighlighted && "highlightSynmbolSelected"])} onClick={onClick}>
           {symbol}
-        </div>
-        <br/>
-        <div className={classnames(["highlightButtonDiv", "pairBottom"])}>
-          <Button className={classnames(["highlightButton", isHighlighted && "highlightButtonSelected"])} onClick={onClick} />
         </div>
       </div>
     );
