@@ -88,16 +88,13 @@ button + button {
     margin-bottom: 10px;
     margin-right: 2px;
 }
-.cipherTextCharPair .pairTop {
+.cipherTextCharPair {
     border: 1px solid #ccc;
     padding: 4px 3px;
 }
 .cipherTextView .cipherTextSymbol,
 .cipherTextView .cipherTextLetter {
     cursor: default;
-}
-.cipherTextView .cipherTextLetter {
-    line-height: 30px;
 }
 
 /*
