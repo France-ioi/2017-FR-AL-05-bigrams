@@ -1,78 +1,96 @@
+
+const seedrandom = require('seedrandom');
+const shuffle = require('shuffle-array');
+
+const sentences = require('./sentences');
+
 module.exports = generate;
 
+const difficultCardinalities = {
+  k: 1 /* 0.0 */,
+  w: 1 /* 0.1 */,
+  z: 1 /* 0.1 */,
+  x: 1 /* 0.2 */,
+  y: 1 /* 0.2 */,
+  j: 1 /* 0.3 */,
+  g: 1 /* 0.4 */,
+  h: 1 /* 0.4 */,
+  b: 1 /* 0.5 */,
+  f: 1 /* 0.5 */,
+  q: 1 /* 0.7 */,
+  v: 1 /* 0.8 */,
+  m: 1 /* 1.5 */,
+  p: 1 /* 1.5 */,
+  c: 1 /* 1.7 */,
+  d: 1 /* 1.8 */,
+  l: 2 /* 2.7 */,
+  o: 2 /* 2.7 */,
+  u: 2 /* 3.2 */,
+  r: 3 /* 3.3 */,
+  n: 3 /* 3.5 */,
+  t: 4 /* 3.6 */,
+  i: 4 /* 3.8 */,
+  s: 4 /* 4.0 */,
+  a: 4 /* 4.1 */,
+  e: 6 /* 8.6 */
+};
+
 function generate (params, seed, callback) {
-  /*const rng = seedrandom(seed);
-  // TODO choose ciphers and plain word.
-  var minLength = words[0][0].length;
-  var cipherLengths = [
-    [7, 10, 8, 7],
-    [10, 9, 9, 4],
-    [5, 10, 7, 10],
-    [4, 5, 6, 4, 5, 6]
-  ];
-
-  var ciphers = [];
-  var plainWord = "";
-  for (var iCipher = 0; iCipher < cipherLengths.length; iCipher++) {
-     var cipher = "";
-     for (var iWord = 0; iWord < cipherLengths[iCipher].length; iWord++) {
-        if (iWord != 0) {
-           cipher += " ";
-        }
-        var length = cipherLengths[iCipher][iWord];
-        var iChoice = Math.trunc(rng() * words[length - minLength].length);
-        var word = words[length - minLength][iChoice];
-        cipher += word;
-        if ((iCipher == 0) && (iWord == cipherLengths[iCipher].length - 1)) {
-           plainWord = word;
-        }
-     }
-     ciphers.push(cipher);
-  }
-
-  var secretKey = [];
-  for (let iKey = 0; iKey < ciphers[0].length; iKey++) {
-     secretKey.push(Math.trunc(rng() * 26));
-  }
-
-  for (let iCipher = 0; iCipher < ciphers.length; iCipher++) {
-     var newCipher = "";
-     for (let iLetter = 0; iLetter < secretKey.length; iLetter++) {
-        var letter = ciphers[iCipher][iLetter];
-        if ((letter == ' ') || (letter == '_')) {
-           newCipher += ' ';
-        } else {
-           var rank = letter.charCodeAt(0) - "A".charCodeAt(0);
-           rank = (rank - secretKey[iLetter] + 26) % 26;
-           newCipher += String.fromCharCode(rank + "A".charCodeAt(0));
-        }
-     }
-     ciphers[iCipher] = newCipher;
-  }
-  // TODO hints.
   const {version} = params;
-  const task = {version, ciphers, hints: {}};
-  if (version == 1) {
-    task.plainWord = plainWord;
-  }
-  const full_task = Object.assign({secretKey}, task);*/
-
-  // TODO replace dummy instance with generation.
-  const task = {
-    version: 1,
-    hints: {},
-    cipherText: [1, 13, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5, 1, 3, 4, 5, 1, 4, 5]
-  };
-
-  const secretKey = [
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L",
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", 
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", 
-    "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L"
-  ];
-
-  const full_task = {task, secretKey};
-
+  const rng = seedrandom(seed);
+  const minLength = version === 1 ? 400 : 2000;
+  const maxLength = minLength + 50;
+  const clearSymbols = getClearSymbols(difficultCardinalities);
+  const decipherSubst = shuffle(clearSymbols, {copy: true, rng: rng});
+  const cipherSubst = getCipherSubstitution(decipherSubst);
+  const withSpaces = false; /* not supported by task */
+  const clearText = sentences.generate(rng, minLength, maxLength, withSpaces).toLowerCase();
+  const cipherText = applySubstitution(rng, cipherSubst, clearText);
+  const task = {version, cipherText, hints: {}};
+  const full_task = Object.assign({}, task, {clearText, cipherSubst, decipherSubst});
   callback(null, {task, full_task});
 };
+
+function getClearSymbols (cardinalities) {
+  const symbols = [];
+  Object.keys(cardinalities).forEach(function (symbol) {
+    const cardinality = cardinalities[symbol];
+    for (let i = 0; i < cardinality; i++) {
+      symbols.push(symbol);
+    }
+  });
+  return symbols.sort();
+}
+
+function getCipherSubstitution (decipherSubst) {
+  const result = {};
+  decipherSubst.forEach(function (symbol, index) {
+    const alts = symbol in result ? result[symbol] : (result[symbol] = []);
+    alts.push(index);
+  });
+  return result;
+}
+
+function applySubstitution (rng, subst, clearText) {
+  const cipher = [];
+  for (let iLetter = 0; iLetter < clearText.length; iLetter++) {
+    const char = clearText.charAt(iLetter);
+    if (char in subst) {
+      const cipherSymbols = subst[char];
+      // Equal probability of using each cipher symbol.
+      const iSymbol = Math.trunc(rng() * cipherSymbols.length);
+      cipher.push(cipherSymbols[iSymbol]);
+    } else {
+      cipher.push(char);
+    }
+  }
+  return cipher;
+}
+
+// Run this module directly with node to test it.
+if (require.main === module) {
+   generate({version: 1}, '', function (err, result) {
+      if (err) throw err;
+      console.log(JSON.stringify(result));
+   });
+}
