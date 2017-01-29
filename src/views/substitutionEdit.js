@@ -3,29 +3,45 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
-import {letterToDisplayString, letterToEditString, symbolToDisplayString} from '../utils';
+import {letterToDisplayString, symbolToDisplayString} from '../utils';
 
 const SubstitutionEditCharPair = EpicComponent(self => {
-  const onChange = function(event) {
+  const onLetterChange = function(event) {
     const {index} = self.props;
-    const value = event.target.value;
+    const value = event.target.value.trim().toUpperCase();
     self.props.onChange(index, value);
   };
   const onFocus = function(event) {
     event.target.select();
   };
-  const onClick = function() {
+  const onSymbolClick = function() {
     self.props.onShowHintRequest(self.props.index);
   };
   self.render = function() {
     const {symbol, letter} = self.props;
     return (
-      <div className={classnames(["substitutionEditCharPair", "charPair"])} >
-        <div className={classnames(["substitutionEditSymbol", "pairTop"])} onClick={onClick}>
+      <div className="substitutionEditCharPair charPair">
+        <div className="substitutionEditSymbol pairTop clickable" onClick={onSymbolClick}>
           {symbol}
         </div>
-        <div className={classnames(["substitutionEditLetter", "pairBottom"])}>
-          <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onChange} onFocus={onFocus} onClick={onFocus} />
+        <div className="substitutionEditLetter pairBottom">
+          <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onLetterChange} onFocus={onFocus} onClick={onFocus} />
+        </div>
+      </div>
+    );
+  };
+});
+
+const SubstitutionEditHint = EpicComponent(self => {
+  self.render = function() {
+    const {symbol, letter} = self.props;
+    return (
+      <div className="substitutionEditCharPair charPair">
+        <div className="substitutionEditSymbol pairTop">
+          {symbol}
+        </div>
+        <div className="substitutionEditLetter pairBottom">
+          <input value={letter} className="substitutionLetterInput" readOnly />
         </div>
       </div>
     );
@@ -44,7 +60,7 @@ export const SubstitutionEdit = EpicComponent(self => {
         </p>
       </div>
     }
-    const maximumScore = 150;
+    const maximumScore = 150; // XXX get from task
     const hintCost = 20;
     const {hints, hintRequest, onRequestHint, onCloseHintRequest} = self.props;
     const highestPossibleScore = Math.max(0, maximumScore - Object.keys(hints).length * hintCost);
@@ -63,7 +79,7 @@ export const SubstitutionEdit = EpicComponent(self => {
   }
 
   self.render = function() {
-    const {substitution, onChange, onShowHintRequest, hintRequest} = self.props;
+    const {symbolAttrs, substitution, onChange, onShowHintRequest, hints, hintRequest} = self.props;
     return (
       <div className="panel panel-default substitutionView">
         <div className="panel-heading toolHeader">
@@ -76,9 +92,13 @@ export const SubstitutionEdit = EpicComponent(self => {
           </p>
           <div className="substitutionBox">
             {substitution.map(function(subObject, index) {
-              const letter = letterToEditString(subObject.letter);
               const symbol = symbolToDisplayString(index);
-              return <SubstitutionEditCharPair key={index} letter={letter} symbol={symbol} index={index} onChange={onChange} onShowHintRequest={onShowHintRequest} />;
+              if (hints[index] !== null) {
+                return <SubstitutionEditHint key={index} letter={hints[index]} symbol={symbol} />;
+              } else {
+                const letter = symbolAttrs[index].letter;
+                return <SubstitutionEditCharPair key={index} index={index} symbol={symbol} letter={letter} onChange={onChange} onShowHintRequest={onShowHintRequest} />;
+              }
             })}
           </div>
         </div>

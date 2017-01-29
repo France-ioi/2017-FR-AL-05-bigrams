@@ -33,21 +33,28 @@ export const Workspace = actions => EpicComponent(self => {
   };
 
   const onBigramSymbolChange = function(index, value) {
-    self.props.dispatch({type: actions.changeBigramHighlight, index, value, charType: "symbols"});
+    value = value.replace(/[^0-9]+/, '');
+    self.props.dispatch({type: actions.changeBigramHighlightSymbols, index, value});
   };
 
   const onBigramLetterChange = function(index, value) {
-    self.props.dispatch({type: actions.changeBigramHighlight, index, value, charType: "letters"});
+    value = value.toUpperCase().replace(/[^A-Z]+/, '');
+    self.props.dispatch({type: actions.changeBigramHighlightLetters, index, value});
   };
 
   const onClickSearch = function(forward, bigrams) {
     self.props.dispatch({type: actions.onSearch, forward, bigrams});
   };
 
+  const onChangeFilter = function (kind, value) {
+    self.props.dispatch({type: actions.filterChanged, kind, value});
+  };
+
   self.render = function () {
-    const {task, workspace, score, hintRequest, submitAnswer} = self.props;
-    const {substitution, highlightToggleState, highlightBigrams, searchIndex, searchBigrams, analysis} = workspace;
-    const {cipherText, numSymbols, hints} = task;
+    const {task, dump, workspace, score, hintRequest, submitAnswer} = self.props;
+    const {cipherText, hints} = task;
+    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters} = dump;
+    const {numSymbols, combinedText, substitution, analysis} = workspace;
     return (
       <div className="taskWrapper">
         {/*<pre>{JSON.stringify(submitAnswer, null, 2)}</pre>*/}
@@ -82,18 +89,20 @@ export const Workspace = actions => EpicComponent(self => {
         <div className="taskInstructions">
           <p>[Instructions]</p>
         </div>
-        <SubstitutionEdit substitution={substitution} onChange={onSubstitutionChange}
-          onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest} onRequestHint={onRequestHint}
-          hintRequest={hintRequest} hints={hints} />
-        <CipherTextView cipherText={cipherText} substitution={substitution} highlightToggleState={highlightToggleState} highlightBigrams={highlightBigrams} searchIndex={searchIndex} searchBigrams={searchBigrams} />
+        <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution} onChange={onSubstitutionChange}
+          onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest}
+          onRequestHint={onRequestHint} hintRequest={hintRequest} hints={hints} />
+        <CipherTextView combinedText={combinedText} searchCursor={searchCursor} />
         <HighlightAndSearch
           substitution={substitution}
+          highlightedBigramSymbols={highlightedBigramSymbols}
+          highlightedBigramLetters={highlightedBigramLetters}
+          filters={filters}
           onHighlightToggle={onHighlightToggle}
-          highlightToggleState={highlightToggleState}
           onBigramSymbolChange={onBigramSymbolChange}
           onBigramLetterChange={onBigramLetterChange}
-          highlightBigrams={highlightBigrams}
           onClickSearch={onClickSearch}
+          onChangeFilter={onChangeFilter}
         />
         <Analysis substitution={substitution} analysis={analysis} />
       </div>

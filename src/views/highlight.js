@@ -3,7 +3,7 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
-import {letterToDisplayString, letterToEditString, symbolToDisplayString} from '../utils';
+import {letterToDisplayString, symbolToDisplayString} from '../utils';
 import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS} from '../constants';
 
 const HighlightTogglePair = EpicComponent(self => {
@@ -28,7 +28,7 @@ const HighlightTogglePair = EpicComponent(self => {
 export const HighlightBigramSymbol = EpicComponent(self => {
   const onChange = function(event) {
     self.props.onChange(self.props.index, event.target.value);
-  }
+  };
   self.render = function() {
     const {index, value} = self.props;
     return (
@@ -42,7 +42,7 @@ export const HighlightBigramSymbol = EpicComponent(self => {
 export const HighlightBigramLetter = EpicComponent(self => {
   const onChange = function(event) {
     self.props.onChange(self.props.index, event.target.value);
-  }
+  };
   self.render = function() {
     const {index, value} = self.props;
     return (
@@ -62,7 +62,12 @@ export const Search = EpicComponent(self => {
     const {bigrams} = self.props;
     self.props.onClick(true, bigrams);
   };
+  const onChangeFilter = function (event) {
+    const value = event.target.value;
+    return self.props.onChangeFilter(value);
+  };
   self.render = function() {
+    const {filter} = self.props;
     return (
       <div>
         <div className="searchDiv">
@@ -72,7 +77,7 @@ export const Search = EpicComponent(self => {
           <Button onClick={onClickNext}>Next</Button>
         </div>
         <div className="applyFiltersDiv">
-          <label><input type="checkbox"/> Apply filter in analysis tool</label>
+          <label><input type="checkbox" value={filter} onChange={onChangeFilter}/> Apply filter in analysis tool</label>
         </div>
       </div>
     );
@@ -80,8 +85,14 @@ export const Search = EpicComponent(self => {
 });
 
 export const HighlightAndSearch = EpicComponent(self => {
+  const onChangeFilterSingle = function (value) {
+    self.props.onChangeFilter('single', value);
+  };
+  const onChangeFilterBigram = function (value) {
+    self.props.onChangeFilter('bigram', value);
+  };
   self.render = function() {
-    const {substitution, onHighlightToggle, highlightToggleState, highlightBigrams, onBigramSymbolChange, onBigramLetterChange, onClickSearch} = self.props;
+    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch} = self.props;
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
@@ -91,27 +102,30 @@ export const HighlightAndSearch = EpicComponent(self => {
           <p className="toolDescription">{"Highlight or search symbols (click to toggle):"}</p>
           <div className="symbolHighlightSearch">
             <div className="highlightToggleBox">
-              {substitution.map(function(subObject, index) {
+              {substitution.map(function(target, index) {
                 const symbol = symbolToDisplayString(index);
-                const letter = letterToDisplayString(index.letter);
-                return <HighlightTogglePair key={index} symbol={symbol} letter={letter} index={index} onClick={onHighlightToggle} isHighlighted={highlightToggleState[index]} />;
+                const letter = letterToDisplayString(target.letter);
+                return <HighlightTogglePair key={index}
+                  index={index} symbol={symbol} letter={letter}
+                  isHint={target.isHint} isHighlighted={target.isHighlighted}
+                  onClick={onHighlightToggle} />;
               })}
             </div>
-            <Search onClick={onClickSearch} bigrams={false} />
+            <Search onClick={onClickSearch} bigrams={false} filter={filters.single} onChangeFilter={onChangeFilterSingle} />
           </div>
           <div className="bigramsHighlightSearch">
             <div className="highlightBigramsBox">
               <p className="toolDescription">Highlight or search up to {NUM_BIGRAMS_SEARCH} bigrams:</p>
               <span className="toolLabel">By symbols:</span>
-              {highlightBigrams.arrays.symbols.map(function(value, index) {
+              {highlightedBigramSymbols.map(function(value, index) {
                 return <HighlightBigramSymbol key={index} index={index} value={value} onChange={onBigramSymbolChange} />
               })}
               <span className="toolLabel">By decoded letters:</span>
-              {highlightBigrams.arrays.letters.map(function(value, index) {
+              {highlightedBigramLetters.map(function(value, index) {
                 return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
               })}
             </div>
-            <Search onClick={onClickSearch} bigrams={true} />
+            <Search onClick={onClickSearch} bigrams={true} filter={filters.bigrams} onChangeFilter={onChangeFilterBigram} />
           </div>
         </div>
       </div>

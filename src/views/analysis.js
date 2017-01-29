@@ -3,19 +3,20 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
-import {letterToDisplayString, symbolsToDisplayString, symbolsToDisplayLetters} from '../utils';
+import {symbolsToDisplayString, symbolsToDisplayLetters} from '../utils';
 
 const AnalysisTriplet = EpicComponent(self => {
   self.render = function() {
-    const {symbols, text, count} = self.props;
+    const {symbols, substitution, count} = self.props;
     const displaySymbols = symbolsToDisplayString(symbols);
+    const text = symbolsToDisplayLetters(substitution, symbols);
     return (
       <div className="analysisTriplet">
         <div className="analysisCharPair charPair">
           <div className="pairTop">{displaySymbols}</div>
           <div className="pairBotton">{text}</div>
         </div>
-        {count}x
+        {count}{"x"}
       </div>
     );
   };
@@ -27,7 +28,7 @@ const AnalysisBox = EpicComponent(self => {
     return (
       <div className="analysisSmallBox">
         {array.map(function(analysisObject, index) {
-          return <AnalysisTriplet key={index} symbols={analysisObject.symbolArray} count={analysisObject.count} text={symbolsToDisplayLetters(substitution, analysisObject.symbolArray)} />;
+          return <AnalysisTriplet key={index} symbols={analysisObject.symbolArray} count={analysisObject.count} substitution={substitution} />;
         })}
       </div>
     );
@@ -80,7 +81,7 @@ export const Analysis = EpicComponent(self => {
                         <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
                       </td>
                       <td className="analysisBox-center">
-                        <AnalysisTriplet symbols={symbolAnalysis.symbolArray} count={symbolAnalysis.count} text={symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray)} />
+                        <AnalysisTriplet symbols={symbolAnalysis.symbolArray} count={symbolAnalysis.count} substitution={substitution} />
                       </td>
                       <td className="analysisBox-after">
                         <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />

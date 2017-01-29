@@ -15,7 +15,6 @@ function gradeAnswer (full_task, task, answer, callback) {
   });
   return;
   const {secretKey} = full_task;
-  const {hints} = task;
   const {key} = answer;
   let nCorrect = 0;
   secretKey.forEach(function (value, index) {
@@ -26,7 +25,7 @@ function gradeAnswer (full_task, task, answer, callback) {
   const is_full_solution = nCorrect === secretKey.length;
   const is_solution = is_full_solution;  // could be nCorrect > 0
   const feedback = is_full_solution;
-  const highestPossibleScore = getHighestPossibleScore(hints);
+  const highestPossibleScore = getHighestPossibleScore(task);
   const score = is_full_solution ? highestPossibleScore : 0;
   callback(null, {
     feedback, score, is_solution, is_full_solution
@@ -34,18 +33,19 @@ function gradeAnswer (full_task, task, answer, callback) {
 }
 
 function grantHint (full_task, task, query, callback) {
-  const {keyIndex} = query;
-  const {secretKey} = full_task;
-  if (typeof keyIndex !== 'number' || keyIndex < 0 || keyIndex >= secretKey.length) {
+  const {index} = query;
+  const {decipherSubst} = full_task;
+  if (typeof index !== 'number' || index < 0 || index >= decipherSubst.length) {
     callback(null, {success: false});
   }
-  // Update task in-place is it is freshly loaded JSON.
-  task.hints[keyIndex] = secretKey[keyIndex];
-  task.highestPossibleScore = getHighestPossibleScore(task.hints);
+  // Update task in-place as it is freshly loaded JSON.
+  task.hints[index] = decipherSubst[index];
+  task.highestPossibleScore = getHighestPossibleScore(task);
   callback(null, {success: true, task: task});
 };
 
-function getHighestPossibleScore (hints) {
-  const nHints = Object.keys(hints).length;
-  return Math.max(0, 150 - nHints * 20);
+function getHighestPossibleScore (task) {
+  const {version, hints, baseScore, hintCost} = task;
+  const nHints = hints.filter(x => x != null).length;
+  return Math.max(0, baseScore - nHints * hintCost);
 }
