@@ -6,6 +6,35 @@ const sentences = require('./sentences');
 
 module.exports = generate;
 
+const easyCardinalities = {
+  K: 1 /* 0.0 */,
+  W: 1 /* 0.1 */,
+  Z: 1 /* 0.1 */,
+  X: 1 /* 0.2 */,
+  Y: 1 /* 0.2 */,
+  J: 1 /* 0.3 */,
+  G: 1 /* 0.4 */,
+  H: 1 /* 0.4 */,
+  B: 1 /* 0.5 */,
+  F: 1 /* 0.5 */,
+  Q: 1 /* 0.7 */,
+  V: 1 /* 0.8 */,
+  M: 1 /* 1.5 */,
+  P: 1 /* 1.5 */,
+  C: 1 /* 1.7 */,
+  D: 1 /* 1.8 */,
+  L: 1 /* 2.7 */,
+  O: 1 /* 2.7 */,
+  U: 1 /* 3.2 */,
+  R: 1 /* 3.3 */,
+  N: 1 /* 3.5 */,
+  T: 1 /* 3.6 */,
+  I: 2 /* 3.8 */,
+  S: 2 /* 4.0 */,
+  A: 2 /* 4.1 */,
+  E: 2 /* 8.6 */
+};
+
 const difficultCardinalities = {
   K: 1 /* 0.0 */,
   W: 1 /* 0.1 */,
@@ -45,7 +74,7 @@ function generate (params, seed, callback) {
   const rng = seedrandom(seed);
   const minLength = version === 1 ? 400 : 2000;
   const maxLength = minLength + 50;
-  const clearSymbols = getClearSymbols(difficultCardinalities);
+  const clearSymbols = getClearSymbols(version === 1 ? easyCardinalities : difficultCardinalities);
   const decipherSubst = shuffle(clearSymbols, {copy: true, rng: rng});
   const cipherSubst = getCipherSubstitution(decipherSubst);
   const withSpaces = false; /* not supported by task */
