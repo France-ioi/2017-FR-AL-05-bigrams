@@ -220,7 +220,7 @@ function updateWorkspace (state, dump) {
   const highlightedLetters = new Map(); // letters → true
 
   /* Hints override user input in the substitution. */
-  const {symbolAttrs, analysisMode, filters} = dump;
+  const {symbolAttrs} = dump;
   /* symbolAttrs : array symbol → {letter, highlight} */
   const substitution = new Array(numSymbols);
   for (let symbol = 0; symbol < numSymbols; symbol++) {
@@ -239,25 +239,23 @@ function updateWorkspace (state, dump) {
     if (attrs.isLocked) {
       target.isLocked = true;
     }
-    if (analysisMode === 'symbols' && typeof attrs.highlight === 'number') {
+    if (typeof attrs.highlight === 'number') {
       target.highlight = attrs.highlight;
       highlightedSymbols.set(symbolStr, attrs.highlight);
     }
   }
 
-  if (analysisMode === 'bigrams') {
-    /* Mark highlighted pairs of symbols and letters. */
-    dump.highlightedBigramSymbols.forEach(function (bigram) {
-      if (isValidSymbolPair(bigram)) {
-        highlightedSymbols.set(bigram, true);
-      }
-    });
-    dump.highlightedBigramLetters.forEach(function (bigram) {
-      if (isValidLetterPair(bigram)) {
-        highlightedLetters.set(bigram, true);
-      }
-    });
-  }
+  /* Mark highlighted pairs of symbols and letters. */
+  dump.highlightedBigramSymbols.forEach(function (bigram) {
+    if (isValidSymbolPair(bigram)) {
+      highlightedSymbols.set(bigram, true);
+    }
+  });
+  dump.highlightedBigramLetters.forEach(function (bigram) {
+    if (isValidLetterPair(bigram)) {
+      highlightedLetters.set(bigram, true);
+    }
+  });
 
   /* Apply the substitution and highlighting */
   const combinedText = [];
@@ -293,6 +291,7 @@ function updateWorkspace (state, dump) {
   }
 
   // Select and filter analysis.
+  const {analysisMode, filters} = dump;
   let analysis;
   if (analysisMode === 'symbols') {
     analysis = state.analysis.symbols;

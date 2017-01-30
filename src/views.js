@@ -120,8 +120,6 @@ export const Workspace = actions => EpicComponent(self => {
           substitution={substitution}
           highlightedBigramSymbols={highlightedBigramSymbols}
           highlightedBigramLetters={highlightedBigramLetters}
-          selectedMode={analysisMode}
-          repeatedBigrams={repeatedBigrams}
           filters={filters}
           onColorPicked={onColorPicked}
           onChangeSymbolHighlight={onChangeSymbolHighlight}
