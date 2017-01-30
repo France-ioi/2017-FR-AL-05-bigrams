@@ -285,7 +285,7 @@ function updateWorkspace (state, dump) {
       cell.hlBigramSecond = true;
     }
     combinedText.push(cell);
-    lastSymbol = symbol;
+    lastSymbol = symbolStr;
     lastLetter = letter;
     lastCell = cell;
   }
