@@ -231,7 +231,7 @@ function updateWorkspace (state, dump) {
     }
     if (typeof attrs.highlight === 'number') {
       target.highlight = attrs.highlight;
-      highlightedSymbols.set(symbolStr, true);
+      highlightedSymbols.set(symbolStr, attrs.highlight);
     }
   }
 
@@ -264,8 +264,8 @@ function updateWorkspace (state, dump) {
     if (target.isLocked) {
       cell.isLocked = true;
     }
-    if (highlightedSymbols.has(symbolStr) || letter && highlightedLetters.has(letter)) {
-      cell.hlSymbol = true;
+    if (highlightedSymbols.has(symbolStr)) {
+      cell.hlSymbol = highlightedSymbols.get(symbolStr);
     }
     if (highlightedSymbols.has(bigramSymbols) || highlightedLetters.has(bigramLetters)) {
       lastCell.hlBigramFirst = true;

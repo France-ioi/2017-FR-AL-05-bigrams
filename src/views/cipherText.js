@@ -4,7 +4,7 @@ import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
 import {letterToDisplayString} from '../utils';
-import {SYMBOL_DIGITS} from '../constants';
+import {SYMBOL_DIGITS, getBackgroundColor} from '../constants';
 
 const CipherTextCharPair = EpicComponent(self => {
   self.render = function() {
@@ -13,12 +13,12 @@ const CipherTextCharPair = EpicComponent(self => {
       "cipherTextCharPair", "charPair",
       isHint && "isHint",
       isLocked && "isLocked",
-      hlSymbol && "pairHighlightedToggle",
       (hlBigramFirst || hlBigramSecond) && "pairHighlightedBigram",
       self.props.isSearched && "isSearched"
     ];
+    const color = getBackgroundColor(hlSymbol, isHint, isLocked);
     return (
-      <div className={classnames(classes)}>
+      <div className={classnames(classes)} style={{backgroundColor: color}}>
         <div className="cipherTextSymbol pairTop">
           {symbol}
         </div>

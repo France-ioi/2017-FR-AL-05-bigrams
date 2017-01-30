@@ -107,7 +107,8 @@ export const HighlightAndSearch = EpicComponent(self => {
     self.props.onChangeFilter('bigrams', value);
   };
   const onChangeSymbolHighlight = function (index, current) {
-    const highlight = typeof current === 'number' ? false : self.props.selectedColorIndex;
+    const {selectedColorIndex} = self.props;
+    const highlight = selectedColorIndex === current ? false : selectedColorIndex;
     self.props.onChangeSymbolHighlight(index, highlight);
   };
   self.render = function() {
