@@ -24,8 +24,9 @@ const SubstitutionEditCharPair = EpicComponent(self => {
   };
   self.render = function() {
     const {symbol, letter, isLocked} = self.props;
+    const classes = ['substitutionEditCharPair', 'charPair', isLocked && 'isLocked']
     return (
-      <div className="substitutionEditCharPair charPair">
+      <div className={classnames(classes)}>
         <div className="substitutionEditSymbol pairTop clickable" onClick={onSymbolClick}>
           {symbol}
         </div>
