@@ -165,6 +165,7 @@ button + button {
     margin-top: 1px;
     display: block;
     border: 1px solid #ccc;
+    background-color: transparent;
 }
 .substitutionLetterInput[readonly] {
     border: 1px solid #eee;
