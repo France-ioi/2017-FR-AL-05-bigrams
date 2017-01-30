@@ -50,10 +50,18 @@ export const Workspace = actions => EpicComponent(self => {
     self.props.dispatch({type: actions.filterChanged, kind, value});
   };
 
+  const onChangeAnalysisMode = function (value) {
+    self.props.dispatch({type: actions.analysisModeChanged, value});
+  };
+
+  const setTextBoxInterface = function (intf) {
+    self.props.dispatch({type: actions.setTextBoxInterface, intf});
+  };
+
   self.render = function () {
     const {task, dump, workspace, score, hintRequest, submitAnswer} = self.props;
     const {cipherText, hints} = task;
-    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters} = dump;
+    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode} = dump;
     const {numSymbols, combinedText, substitution, analysis} = workspace;
     return (
       <div className="taskWrapper">
@@ -92,7 +100,9 @@ export const Workspace = actions => EpicComponent(self => {
         <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution} onChange={onSubstitutionChange}
           onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest}
           onRequestHint={onRequestHint} hintRequest={hintRequest} hints={hints} />
-        <CipherTextView combinedText={combinedText} searchCursor={searchCursor} />
+        <CipherTextView
+          combinedText={combinedText} searchCursor={searchCursor}
+          setTextBoxInterface={setTextBoxInterface} />
         <HighlightAndSearch
           substitution={substitution}
           highlightedBigramSymbols={highlightedBigramSymbols}
@@ -104,7 +114,9 @@ export const Workspace = actions => EpicComponent(self => {
           onClickSearch={onClickSearch}
           onChangeFilter={onChangeFilter}
         />
-        <Analysis substitution={substitution} analysis={analysis} />
+        <Analysis substitution={substitution} analysis={analysis}
+          selectedMode={analysisMode}
+          onChangeMode={onChangeAnalysisMode} />
       </div>
     );
   };

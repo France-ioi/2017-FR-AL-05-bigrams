@@ -52,7 +52,7 @@ const config = module.exports = {
 };
 
 if (process.env.NODE_ENV !== 'production') {
-  config.devtool = 'inline-source-map';
+  config.devtool = 'eval';
 } else {
   config.plugins.push(new webpack.optimize.UglifyJsPlugin({
     compress: {

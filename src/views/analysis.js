@@ -3,18 +3,37 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
-import {symbolsToDisplayString, symbolsToDisplayLetters} from '../utils';
+import {
+  symbolToDisplayString, letterToDisplayString,
+  symbolsToDisplayLetters} from '../utils';
 
 const AnalysisTriplet = EpicComponent(self => {
   self.render = function() {
-    const {symbols, substitution, count} = self.props;
-    const displaySymbols = symbolsToDisplayString(symbols);
-    const text = symbolsToDisplayLetters(substitution, symbols);
+    const {symbols, letters, count} = self.props;
     return (
       <div className="analysisTriplet">
         <div className="analysisCharPair charPair">
-          <div className="pairTop">{displaySymbols}</div>
-          <div className="pairBotton">{text}</div>
+          <div className="pairTop">{symbols}</div>
+          <div className="pairBottom">{letters}</div>
+        </div>
+        {count}{"x"}
+      </div>
+    );
+  };
+});
+
+const AnalysisSymbolTriplet = EpicComponent(self => {
+  self.render = function() {
+    const {symbol, substitution, count} = self.props;
+    const target = substitution[symbol];
+    const symbolStr = symbolToDisplayString(symbol);
+    const letter = letterToDisplayString(target.letter);
+    const classes = ["analysisCharPair", "charPair", target.isHighlighted && "pairHighlightedToggle"];
+    return (
+      <div className="analysisTriplet">
+        <div className={classnames(classes)}>
+          <div className="pairTop">{symbolStr}</div>
+          <div className="pairBottom">{letter}</div>
         </div>
         {count}{"x"}
       </div>
@@ -28,7 +47,7 @@ const AnalysisBox = EpicComponent(self => {
     return (
       <div className="analysisSmallBox">
         {array.map(function(analysisObject, index) {
-          return <AnalysisTriplet key={index} symbols={analysisObject.symbolArray} count={analysisObject.count} substitution={substitution} />;
+          return <AnalysisSymbolTriplet key={index} symbol={analysisObject.symbol} count={analysisObject.count} substitution={substitution} />;
         })}
       </div>
     );
@@ -36,13 +55,11 @@ const AnalysisBox = EpicComponent(self => {
 });
 
 export const Analysis = EpicComponent(self => {
-  self.state = {selectedMode: "symbols"};
-  const onChange = function(event) {
-    self.setState({selectedMode: event.target.value});
+  const onChange = function (event) {
+    self.props.onChangeMode(event.target.value);
   };
   self.render = function() {
-    const {substitution, analysis} = self.props;
-    const {selectedMode} = self.state;
+    const {substitution, analysis, selectedMode} = self.props;
     return (
       <div className="panel panel-default analysisView">
         <div className="panel-heading toolHeader">
@@ -68,7 +85,8 @@ export const Analysis = EpicComponent(self => {
                     Most frequent symbols after:
                   </td>
                 </tr>
-                {analysis[selectedMode].map(function(symbolAnalysis, index) {
+                {analysis.map(function(symbolAnalysis, index) {
+                  const displayLetters = symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray);
                   return (
                     <tr key={index}>
                       <td className="analysisBox-labels">
@@ -81,7 +99,7 @@ export const Analysis = EpicComponent(self => {
                         <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
                       </td>
                       <td className="analysisBox-center">
-                        <AnalysisTriplet symbols={symbolAnalysis.symbolArray} count={symbolAnalysis.count} substitution={substitution} />
+                        <AnalysisTriplet symbols={symbolAnalysis.symbolString} letters={displayLetters} count={symbolAnalysis.count} />
                       </td>
                       <td className="analysisBox-after">
                         <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />

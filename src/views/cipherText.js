@@ -8,10 +8,10 @@ import {SYMBOL_DIGITS} from '../constants';
 
 const CipherTextCharPair = EpicComponent(self => {
   self.render = function() {
-    const {symbol, letter, hlSingle, hlBigramFirst, hlBigramSecond} = self.props.cell;
+    const {symbol, letter, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props.cell;
     const classes = [
       "cipherTextCharPair", "charPair",
-      hlSingle && "pairHighlightedToggle",
+      hlSymbol && "pairHighlightedToggle",
       (hlBigramFirst || hlBigramSecond) && "pairHighlightedBigram",
       self.props.isSearched && "isSearched"
     ];
@@ -32,6 +32,14 @@ export const CipherTextView = EpicComponent(self => {
 
   const defaultCipherAttrs = {highlight: false};
 
+  function refTextBox (element) {
+    function scrollToPosition (index) {
+      const childElement = element.children[index];
+      element.scrollTop = childElement.offsetTop - element.offsetTop - (element.clientHeight / 2);
+    }
+    self.props.setTextBoxInterface(element && {scrollToPosition});
+  }
+
   self.render = function() {
     const {combinedText, searchCursor} = self.props;
     return (
@@ -43,7 +51,7 @@ export const CipherTextView = EpicComponent(self => {
           <p className="toolDescription">
             Here is the text to decrypt. Your solution attempt is represented as letters under each {SYMBOL_DIGITS} digit symobl.
           </p>
-          <div className="cipherTextBox">
+          <div className="cipherTextBox" ref={refTextBox}>
             {combinedText.map(function(symbol, index) {
               const isSearched = index >= searchCursor.first && index <= searchCursor.last;
               return <CipherTextCharPair key={index} cell={combinedText[index]} isSearched={isSearched} />;

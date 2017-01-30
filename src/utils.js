@@ -96,25 +96,30 @@ export function analyzeAuxiliary(cipherText, bigrams) {
     const afterArray = [];
     for(let otherSymbol in infoObject.before) {
       beforeArray.push({
-        symbolArray: [otherSymbol],
+        symbol: otherSymbol,
         count: infoObject.before[otherSymbol].count
       });
     }
     for(let otherSymbol in infoObject.after) {
       afterArray.push({
-        symbolArray: [otherSymbol],
+        symbol: otherSymbol,
         count: infoObject.after[otherSymbol].count
       });
     }
     beforeArray.sort(compareAnalysisCounts);
+    beforeArray.splice(12);
+    beforeArray.reverse();
     afterArray.sort(compareAnalysisCounts);
+    afterArray.splice(12)
     result.push({
       symbolArray: infoObject.symbolArray,
+      symbolString: symbolsToDisplayString(infoObject.symbolArray),
       count: infoObject.count,
       before: beforeArray,
       after: afterArray
     });
   }
+
   result.sort(compareAnalysisCounts);
   return result;
 };

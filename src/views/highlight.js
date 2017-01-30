@@ -63,7 +63,7 @@ export const Search = EpicComponent(self => {
     self.props.onClick(true, bigrams);
   };
   const onChangeFilter = function (event) {
-    const value = event.target.value;
+    const value = event.target.checked;
     return self.props.onChangeFilter(value);
   };
   self.render = function() {
@@ -85,11 +85,11 @@ export const Search = EpicComponent(self => {
 });
 
 export const HighlightAndSearch = EpicComponent(self => {
-  const onChangeFilterSingle = function (value) {
-    self.props.onChangeFilter('single', value);
+  const onChangeFilterSymbols = function (value) {
+    self.props.onChangeFilter('symbols', value);
   };
-  const onChangeFilterBigram = function (value) {
-    self.props.onChangeFilter('bigram', value);
+  const onChangeFilterBigrams = function (value) {
+    self.props.onChangeFilter('bigrams', value);
   };
   self.render = function() {
     const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch} = self.props;
@@ -111,7 +111,7 @@ export const HighlightAndSearch = EpicComponent(self => {
                   onClick={onHighlightToggle} />;
               })}
             </div>
-            <Search onClick={onClickSearch} bigrams={false} filter={filters.single} onChangeFilter={onChangeFilterSingle} />
+            <Search onClick={onClickSearch} bigrams={false} filter={filters.symbols} onChangeFilter={onChangeFilterSymbols} />
           </div>
           <div className="bigramsHighlightSearch">
             <div className="highlightBigramsBox">
@@ -125,7 +125,7 @@ export const HighlightAndSearch = EpicComponent(self => {
                 return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
               })}
             </div>
-            <Search onClick={onClickSearch} bigrams={true} filter={filters.bigrams} onChangeFilter={onChangeFilterBigram} />
+            <Search onClick={onClickSearch} bigrams={true} filter={filters.bigrams} onChangeFilter={onChangeFilterBigrams} />
           </div>
         </div>
       </div>

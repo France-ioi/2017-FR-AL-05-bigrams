@@ -1,10 +1,11 @@
 
 import runTask from 'alkindi-task-lib';
 import update from 'immutability-helper';
+import {takeLatest, select} from 'redux-saga/effects';
 
 import Task from './intro';
 import {Workspace} from './views';
-import {symbolToDisplayString, isValidLetter, isValidSymbolPair, isValidLetterPair, analyze, letterToDisplayString} from './utils';
+import {symbolToDisplayString, isValidLetter, isValidSymbolPair, isValidLetterPair, analyze, letterToDisplayString, symbolsToDisplayLetters} from './utils';
 import {NUM_BIGRAMS_SEARCH} from './constants';
 
 import 'font-awesome/css/font-awesome.css';
@@ -44,7 +45,7 @@ function TaskBundle (bundle, deps) {
   const WorkspaceActions = bundle.pack(
     'showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback',
     'changeSubstitution', 'toggleHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
-    'onSearch', 'filterChanged');
+    'onSearch', 'filterChanged', 'analysisModeChanged', 'setTextBoxInterface');
   function WorkspaceSelector (state, props) {
     const {score, task, dump, workspace, hintRequest, submitAnswer} = state;
     return {score, task, dump, workspace, hintRequest, submitAnswer: submitAnswer || {}};
@@ -55,19 +56,16 @@ function TaskBundle (bundle, deps) {
 
   function taskLoaded (state) {
     const dump = makeDump(state.task);
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return initWorkspace(state, dump);
   }
 
   function taskUpdated (state) {
     const dump = reconcileDump(state.task, state.dump);
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return initWorkspace(state, dump);
   }
 
   function workspaceLoaded (state, dump) {
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return updateWorkspace(state, dump);
   }
 
   function isWorkspaceReady (state) {
@@ -81,8 +79,7 @@ function TaskBundle (bundle, deps) {
     if (letter === '' || isValidLetter(letter)) {
       const dump = update(state.dump, {
         symbolAttrs: {[index]: {letter: {$set: letter}}}});
-      const workspace = makeWorkspace(state.task, dump);
-      state = {...state, dump, workspace};
+      return updateWorkspace(state, dump);
     }
     return state;
   });
@@ -93,8 +90,7 @@ function TaskBundle (bundle, deps) {
     const {index} = action;
     const dump = update(state.dump, {
       symbolAttrs: {[index]: {highlight: {$apply: b => !b}}}});
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return updateWorkspace(state, dump);
   });
 
   /* changeBigramHighlightSymbols {index, value} changes the symbols
@@ -107,8 +103,7 @@ function TaskBundle (bundle, deps) {
         [index]: {$set: value}
       }
     });
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return updateWorkspace(state, dump);
   });
 
   /* changeBigramHighlightLetters {index, value} changes the letters
@@ -121,8 +116,7 @@ function TaskBundle (bundle, deps) {
         [index]: {$set: value}
       }
     });
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return updateWorkspace(state, dump);
   });
 
   /* search {forward, bigrams} finds the next or previous match. */
@@ -131,16 +125,37 @@ function TaskBundle (bundle, deps) {
     const {forward, bigrams} = action;
     const searchCursor = moveSearchCursor(state, forward, bigrams);
     const dump = update(state.dump, {searchCursor: {$set: searchCursor}});
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return updateWorkspace(state, dump);
+  });
+  bundle.addSaga(function* () {
+    /* After every onSearch action is reduced, scroll the text box to show
+       the first selected character. */
+    yield takeLatest(deps.onSearch, function* (action) {
+      const textBoxInterface = yield select(state => state.textBoxInterface);
+      const index = yield select(state => state.dump.searchCursor.first);
+      if (textBoxInterface && index >= 0) {
+        textBoxInterface.scrollToPosition(index);
+      }
+    });
   });
 
-  bundle.defineAction('filterChanged', 'Workspace.FilterChanged');
+  bundle.defineAction('filterChanged', 'Workspace.Filter.Changed');
   bundle.addReducer('filterChanged', function (state, action) {
     const {kind, value} = action;
     const dump = update(state.dump, {filters: {[kind]: {$set: value}}});
-    const workspace = makeWorkspace(state.task, dump);
-    return {...state, dump, workspace};
+    return updateWorkspace(state, dump);
+  });
+
+  bundle.defineAction('analysisModeChanged', 'Workspace.AnalysisMode.Changed');
+  bundle.addReducer('analysisModeChanged', function (state, action) {
+    const {value} = action;
+    const dump = update(state.dump, {analysisMode: {$set: value}});
+    return updateWorkspace(state, dump);
+  });
+
+  bundle.defineAction('setTextBoxInterface', 'Workspace.TextBox.SetInterface');
+  bundle.addReducer('setTextBoxInterface', function (state, action) {
+    return {...state, textBoxInterface: action.intf};
   });
 
 }
@@ -152,8 +167,9 @@ function makeDump (task) {
   const highlightedBigramSymbols = new Array(NUM_BIGRAMS_SEARCH).fill(''); // ['0102', ...]
   const highlightedBigramLetters = new Array(NUM_BIGRAMS_SEARCH).fill(''); // ['EN', ...]
   const searchCursor = {first: -1, last: -1};
-  const filters = {single: false, bigrams: false};
-  return {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters};
+  const filters = {symbols: false, bigrams: false};
+  const analysisMode = 'symbols';
+  return {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode};
 }
 
 function reconcileDump (task, dump) {
@@ -164,9 +180,15 @@ function dumpWorkspace (state) {
   return state.dump;
 }
 
-/* Build the workspace (live data) based on the task and dump. */
-function makeWorkspace (task, dump) {
+/* Return a state with the workspace initialized for the given dump. */
+function initWorkspace (state, dump) {
+  const analysis = analyze(state.task.cipherText);
+  return updateWorkspace({...state, analysis}, dump);
+}
 
+/* Update the state by rebuilding a workspace for the given dump. */
+function updateWorkspace (state, dump) {
+  const {task} = state;
   const {cipherText, hints} = task;
   const numSymbols = hints.length;
 
@@ -193,9 +215,6 @@ function makeWorkspace (task, dump) {
     if (attrs.highlight) {
       target.isHighlighted = true;
       highlightedSymbols.set(symbolStr, true);
-      if (letter !== null) {
-        highlightedLetters.set(letter, true);
-      }
     }
   }
 
@@ -223,7 +242,7 @@ function makeWorkspace (task, dump) {
     const bigramLetters = `${letterToDisplayString(lastLetter)}${letterToDisplayString(letter)}`;
     const cell = {index: iSymbol, symbol: symbolStr, letter};
     if (highlightedSymbols.has(symbolStr) || letter && highlightedLetters.has(letter)) {
-      cell.hlSingle = true;
+      cell.hlSymbol = true;
     }
     if (highlightedSymbols.has(bigramSymbols) || highlightedLetters.has(bigramLetters)) {
       lastCell.hlBigramFirst = true;
@@ -235,22 +254,35 @@ function makeWorkspace (task, dump) {
     lastCell = cell;
   }
 
-  /* Analysis -- TODO: save and reuse */
-  const analysis = analyze(cipherText);
+  // Select and filter analysis.
+  const {analysisMode, filters} = dump;
+  let analysis = state.analysis[analysisMode];
+  if (filters[analysisMode]) {
+    analysis = analysis.filter(function (obj) {
+      const displayLetters = symbolsToDisplayLetters(substitution, obj.symbolArray);
+      return highlightedSymbols.has(obj.symbolString) ||
+        highlightedLetters.has(displayLetters);
+    });
+  }
 
-  return {numSymbols, combinedText, substitution, analysis, ready: true};
+  const workspace = {numSymbols, combinedText, substitution, analysis, ready: true};
+  return {...state, dump, workspace};
 }
 
 function moveSearchCursor (state, forward, bigrams) {
-  const step = forward ? 1 : -1;
-  const {first} = state.dump.searchCursor;
   const {combinedText} = state.workspace;
-  let iCell = first + step, cell, looped = false;
-  while (true) {
+  const step = forward ? 1 : -1;
+  const first = Math.min(Math.max(state.dump.searchCursor.first, 0), combinedText.length - 1);
+  let iCell = first, cell, looped = false;
+  do {
+    iCell += step;
     if (iCell === -1) {
       iCell = combinedText.length - 1;
     } else if (iCell === combinedText.length) {
       iCell = 0;
+    }
+    if (iCell === first) {
+      looped = true;
     }
     cell = combinedText[iCell];
     if (bigrams) {
@@ -258,17 +290,10 @@ function moveSearchCursor (state, forward, bigrams) {
         return {first: iCell, last: iCell + 1};
       }
     } else {
-      if (cell.hlSingle) {
+      if (cell.hlSymbol) {
         return {first: iCell, last: iCell};
       }
     }
-    iCell += step;
-    if (looped) {
-      break;
-    }
-    if (iCell === first) {
-      looped = true;
-    }
-  }
+  } while (!looped);
   return {first, last: first - 1};
 }
