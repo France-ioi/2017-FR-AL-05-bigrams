@@ -18,7 +18,9 @@ const SubstitutionEditCharPair = EpicComponent(self => {
     self.props.onShowHintRequest(self.props.index);
   };
   const onLockClick = function() {
-    self.props.onLockSymbol(self.props.index, !self.props.isLocked);
+    if (self.props.letter) {
+      self.props.onLockSymbol(self.props.index, !self.props.isLocked);
+    }
   };
   self.render = function() {
     const {symbol, letter, isLocked} = self.props;
@@ -31,7 +33,7 @@ const SubstitutionEditCharPair = EpicComponent(self => {
           {isLocked
             ? <input value={letter} className="substitutionLetterInput" readOnly />
             : <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onLetterChange} onFocus={onFocus} onClick={onFocus} />}
-          <i onClick={onLockClick} className={classnames(['fa', isLocked ? 'fa-lock' : 'fa-unlock-alt'])}></i>
+          <i onClick={onLockClick} className={classnames(['fa', isLocked ? 'fa-lock' : 'fa-unlock-alt', !letter && 'lockDisabled'])}></i>
         </div>
       </div>
     );
