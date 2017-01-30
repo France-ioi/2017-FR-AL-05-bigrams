@@ -92,12 +92,12 @@ export const SubstitutionEdit = EpicComponent(self => {
     return (
       <div className="panel panel-default substitutionView">
         <div className="panel-heading toolHeader">
-          Substitution edition and hints
+          substitution et indices
         </div>
         <div className="panel-body">
           {hintRequest && renderHintRequest()}
           <p className="toolDescription">
-            Click on a symbol to edit the corresponding letter or obtain a hint.
+            Cliquez sous un nombre pour éditer la lettre qui correspond, ou sur le nombre pour l'obtenir en indice.
           </p>
           <div className="substitutionBox">
             {substitution.map(function(subObject, index) {

@@ -67,7 +67,7 @@ export const Analysis = EpicComponent(self => {
     return (
       <div className="panel panel-default analysisView">
         <div className="panel-heading toolHeader">
-          {"Analysis"}
+          {"analyse"}
         </div>
         <div className="panel-body">
           <div className="analysisChoiceContainer">
@@ -83,11 +83,11 @@ export const Analysis = EpicComponent(self => {
                 <tr>
                   <td></td>
                   <td>
-                    Most frequent symbols before:
+                    Nombres qui suivent le plus fréquemment :
                   </td>
                   <td></td>
                   <td>
-                    Most frequent symbols after:
+                    Nombres qui précèdent le plus fréquemment :
                   </td>
                 </tr>
                 {analysis.map(function(symbolAnalysis, index) {

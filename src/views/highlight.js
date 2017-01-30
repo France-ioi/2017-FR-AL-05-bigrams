@@ -76,13 +76,12 @@ export const Search = EpicComponent(self => {
     return (
       <div>
         <div className="searchDiv">
-          Search in text:
-          <br/>
-          <Button onClick={onClickPrevious}>Previous</Button>
-          <Button onClick={onClickNext}>Next</Button>
+          Rechercher :&nbsp;
+          <Button onClick={onClickPrevious}>&lt;</Button>
+          <Button onClick={onClickNext}>&gt;</Button>
         </div>
         <div className="applyFiltersDiv">
-          <label><input type="checkbox" value={filter} onChange={onChangeFilter}/> Apply filter in analysis tool</label>
+          <label><input type="checkbox" value={filter} onChange={onChangeFilter}/>Filtrer dans l'analyse</label>
         </div>
       </div>
     );
@@ -101,11 +100,11 @@ export const HighlightAndSearch = EpicComponent(self => {
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
-          Search and highlighting
+          recherche et filtrage
         </div>
         <div className="panel-body">
           <div className="symbolHighlightSearch">
-            <p className="toolDescription">{"Highlight or search symbols (click to toggle):"}</p>
+            <p className="toolDescription">{"Cliquez sur une couleur puis des nombres pour colorer toutes leurs occurrences dans le texte et l'analyse :"}</p>
             <div className="higlightPalette">
               <span className="color" style={{backgroundColor: "#e6c319"}}></span>
               <span className="color selected" style={{backgroundColor: "#19c7e6"}}></span>
@@ -127,14 +126,14 @@ export const HighlightAndSearch = EpicComponent(self => {
             </div>
           </div>
           <div className="bigramsHighlightSearch">
-            <p className="toolDescription">Highlight or search up to {NUM_BIGRAMS_SEARCH} bigrams:</p>
+            <p className="toolDescription">Entrez jusqu'à {NUM_BIGRAMS_SEARCH} paires de nombres ou de lettres pour colorer leurs occurrences :</p>
             <div className="toolBox">
               <div className="highlightBigramsBox">
-                <span className="toolLabel">By symbols:</span>
+                <span className="toolLabel">Paires de nombres :</span>
                 {highlightedBigramSymbols.map(function(value, index) {
                   return <HighlightBigramSymbol key={index} index={index} value={value} onChange={onBigramSymbolChange} />
                 })}
-                <span className="toolLabel">By decoded letters:</span>
+                <span className="toolLabel">Paires de lettres :</span>
                 {highlightedBigramLetters.map(function(value, index) {
                   return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
                 })}

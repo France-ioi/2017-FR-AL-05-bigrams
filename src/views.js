@@ -99,7 +99,6 @@ export const Workspace = actions => EpicComponent(self => {
             ? <Alert bsStyle='warning'>{"Trop de réponses en une minute."}</Alert>
             : <Alert bsStyle='error'>{"Votre réponse n'a pas pu être prise en compte."}</Alert>)}
         <div className="taskInstructions">
-          <p>[Instructions]</p>
         </div>
         <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution}
           onChange={onSubstitutionChange} onLockSymbol={onLockSymbol}

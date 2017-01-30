@@ -47,11 +47,11 @@ export const CipherTextView = EpicComponent(self => {
     return (
       <div className="panel panel-default cipherTextView">
         <div className="panel-heading toolHeader">
-          {"Encrypted text and decryption attempt"}
+          {"texte chiffé et déchiffré"}
         </div>
         <div className="panel-body">
           <p className="toolDescription">
-            Here is the text to decrypt. Your solution attempt is represented as letters under each {SYMBOL_DIGITS} digit symobl.
+            Voici le texte chiffré et sous chaque nombre la lettre correspondante selon votre substitution.
           </p>
           <div className="cipherTextBox" ref={refTextBox}>
             {combinedText.map(function(symbol, index) {

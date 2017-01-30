@@ -205,7 +205,7 @@ button + button {
 }
 .highlightToggleBox,
 .highlightBigramsBox {
-    width: 600px;
+    width: 550px;
     display: table-cell;
     vertical-align: top;
 }
