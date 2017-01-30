@@ -4,12 +4,12 @@ export const SYMBOL_DIGITS = 2;
 export const NEUTRAL_HUE =
   ['gray', '#cccccc', '#eeeeee', '#ffffff'];
 export const COLOR_PALETTE = [
-  ['jaune', '#f2d70d', '#f8e86d', '#fcf3b6'],
-  ['rouge', '#f50a0a', '#f96c6c', '#fcb6b6'],
-  ['vert', '#80f50a', '#b3f96c', '#d9fcb6'],
-  ['bleu', '#0addf5', '#6cebf9', '#b6f5fc'],
-  ['orange', '#f5700a', '#f9a96c', '#fcd4b6'],
-  ['violet', '#be6cf9', '#d49dfb', '#e9cefd']
+  ['vert', '#a8cb62', '#9ff000', '#ccff99'],
+  ['bleu', '#7ec6ce', '#0addf5', '#b6f5fc'],
+  ['violet', '#c29cde', '#c87aff', '#e5c2ff'],
+  ['rose', '#db94cf', '#ff33dd', '#ff99ee'],
+  ['orange', '#d7a775', '#ff8400', '#ffc180'],
+  ['jaune', '#e2d05a', '#ffdd00', '#ffeb66']
 ];
 
 export function getBackgroundColor (index, isHint, isLocked) {

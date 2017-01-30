@@ -15,7 +15,7 @@ const ColorPickerItem = EpicComponent(self => {
     const classes = ['color', selected && 'selected'];
     return (
       <span className={classnames(classes)}
-        style={{backgroundColor: hue[1]}} onClick={onClick} />);
+        style={{backgroundColor: hue[2]}} onClick={onClick} />);
   };
 });
 
