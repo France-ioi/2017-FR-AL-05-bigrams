@@ -149,6 +149,8 @@ button + button {
 .substitutionEditCharPair {
     margin-bottom: 3px;
     margin-right: 2px;
+    height: 81px;
+    vertical-align: top;
 }
 .substitutionEditSymbol.pairTop {
     border: 1px solid #ccc;
@@ -161,6 +163,11 @@ button + button {
     width: 28px;
     text-align: center;
     margin-top: 1px;
+    display: block;
+    border: 1px solid #ccc;
+}
+.substitutionLetterInput[readonly] {
+    border: 1px solid #eee;
 }
 /*
 
@@ -277,6 +284,9 @@ td.analysisBox-labels {
 
 /* Temporary rules */
 
-.charPair.isHint {
+.charPair.isLocked {
     background-color: #eee;
+}
+.charPair.isHint {
+    background-color: #ccc;
 }

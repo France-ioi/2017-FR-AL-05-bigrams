@@ -28,6 +28,10 @@ export const Workspace = actions => EpicComponent(self => {
     self.props.dispatch({type: actions.changeSubstitution, index, letter});
   };
 
+  const onLockSymbol = function (index, value) {
+    self.props.dispatch({type: actions.lockSymbol, index, value});
+  };
+
   const onHighlightToggle = function(index, letter) {
     self.props.dispatch({type: actions.toggleHighlight, index});
   };
@@ -97,7 +101,8 @@ export const Workspace = actions => EpicComponent(self => {
         <div className="taskInstructions">
           <p>[Instructions]</p>
         </div>
-        <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution} onChange={onSubstitutionChange}
+        <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution}
+          onChange={onSubstitutionChange} onLockSymbol={onLockSymbol}
           onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest}
           onRequestHint={onRequestHint} hintRequest={hintRequest} hints={hints} />
         <CipherTextView

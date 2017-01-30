@@ -8,10 +8,11 @@ import {SYMBOL_DIGITS} from '../constants';
 
 const CipherTextCharPair = EpicComponent(self => {
   self.render = function() {
-    const {symbol, letter, isHint, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props;
+    const {symbol, letter, isHint, isLocked, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props;
     const classes = [
       "cipherTextCharPair", "charPair",
       isHint && "isHint",
+      isLocked && "isLocked",
       hlSymbol && "pairHighlightedToggle",
       (hlBigramFirst || hlBigramSecond) && "pairHighlightedBigram",
       self.props.isSearched && "isSearched"

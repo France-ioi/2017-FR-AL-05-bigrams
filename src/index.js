@@ -44,7 +44,7 @@ function TaskBundle (bundle, deps) {
   /* The 'Workspace' view displays the main task view to the contestant. */
   const WorkspaceActions = bundle.pack(
     'showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback',
-    'changeSubstitution', 'toggleHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
+    'changeSubstitution', 'lockSymbol', 'toggleHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
     'onSearch', 'filterChanged', 'analysisModeChanged', 'setTextBoxInterface');
   function WorkspaceSelector (state, props) {
     const {score, task, dump, workspace, hintRequest, submitAnswer} = state;
@@ -82,6 +82,14 @@ function TaskBundle (bundle, deps) {
       return updateWorkspace(state, dump);
     }
     return state;
+  });
+
+  bundle.defineAction('lockSymbol', 'Workspace.LockSymbol');
+  bundle.addReducer('lockSymbol', function (state, action) {
+    let {index, value} = action;
+    const dump = update(state.dump, {
+      symbolAttrs: {[index]: {isLocked: {$set: value}}}});
+    return updateWorkspace(state, dump);
   });
 
   /* toggleHighlight {index} updates the toggle state accordingly. */
@@ -212,6 +220,9 @@ function updateWorkspace (state, dump) {
       letter = attrs.letter;
     }
     target.letter = letter;
+    if (attrs.isLocked) {
+      target.isLocked = true;
+    }
     if (attrs.highlight) {
       target.isHighlighted = true;
       highlightedSymbols.set(symbolStr, true);
@@ -243,6 +254,9 @@ function updateWorkspace (state, dump) {
     const cell = {index: iSymbol, symbol: symbolStr, letter};
     if (target.isHint) {
       cell.isHint = true;
+    }
+    if (target.isLocked) {
+      cell.isLocked = true;
     }
     if (highlightedSymbols.has(symbolStr) || letter && highlightedLetters.has(letter)) {
       cell.hlSymbol = true;

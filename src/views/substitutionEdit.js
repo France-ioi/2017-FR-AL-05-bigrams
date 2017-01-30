@@ -17,15 +17,21 @@ const SubstitutionEditCharPair = EpicComponent(self => {
   const onSymbolClick = function() {
     self.props.onShowHintRequest(self.props.index);
   };
+  const onLockClick = function() {
+    self.props.onLockSymbol(self.props.index, !self.props.isLocked);
+  };
   self.render = function() {
-    const {symbol, letter} = self.props;
+    const {symbol, letter, isLocked} = self.props;
     return (
       <div className="substitutionEditCharPair charPair">
         <div className="substitutionEditSymbol pairTop clickable" onClick={onSymbolClick}>
           {symbol}
         </div>
         <div className="substitutionEditLetter pairBottom">
-          <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onLetterChange} onFocus={onFocus} onClick={onFocus} />
+          {isLocked
+            ? <input value={letter} className="substitutionLetterInput" readOnly />
+            : <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onLetterChange} onFocus={onFocus} onClick={onFocus} />}
+          <i onClick={onLockClick} className={classnames(['fa', isLocked ? 'fa-lock' : 'fa-unlock-alt'])}></i>
         </div>
       </div>
     );
@@ -79,7 +85,7 @@ export const SubstitutionEdit = EpicComponent(self => {
   }
 
   self.render = function() {
-    const {symbolAttrs, substitution, onChange, onShowHintRequest, hints, hintRequest} = self.props;
+    const {symbolAttrs, substitution, onChange, onLockSymbol, onShowHintRequest, hints, hintRequest} = self.props;
     return (
       <div className="panel panel-default substitutionView">
         <div className="panel-heading toolHeader">
@@ -96,8 +102,8 @@ export const SubstitutionEdit = EpicComponent(self => {
               if (hints[index] !== null) {
                 return <SubstitutionEditHint key={index} letter={hints[index]} symbol={symbol} />;
               } else {
-                const letter = symbolAttrs[index].letter;
-                return <SubstitutionEditCharPair key={index} index={index} symbol={symbol} letter={letter} onChange={onChange} onShowHintRequest={onShowHintRequest} />;
+                const {letter, isLocked} = symbolAttrs[index];
+                return <SubstitutionEditCharPair key={index} index={index} symbol={symbol} letter={letter} isLocked={isLocked} onChange={onChange} onShowHintRequest={onShowHintRequest} onLockSymbol={onLockSymbol} />;
               }
             })}
           </div>
