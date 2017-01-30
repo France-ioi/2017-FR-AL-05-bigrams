@@ -45,7 +45,8 @@ function TaskBundle (bundle, deps) {
   const WorkspaceActions = bundle.pack(
     'showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback',
     'changeSubstitution', 'lockSymbol', 'changeSymbolHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
-    'onSearch', 'filterChanged', 'analysisModeChanged', 'setTextBoxInterface', 'colorPicked');
+    'onSearch', 'filterChanged', 'analysisModeChanged', 'repeatedBigramsFilterChanged',
+    'setTextBoxInterface', 'colorPicked');
   function WorkspaceSelector (state, props) {
     const {score, task, dump, workspace, hintRequest, submitAnswer, selectedColorIndex} = state;
     return {score, task, dump, workspace, hintRequest, submitAnswer: submitAnswer || {}, selectedColorIndex};
@@ -154,6 +155,13 @@ function TaskBundle (bundle, deps) {
     return updateWorkspace(state, dump);
   });
 
+  bundle.defineAction('repeatedBigramsFilterChanged', 'Workspace.RepeatedBigramsFilter.Changed');
+  bundle.addReducer('repeatedBigramsFilterChanged', function (state, action) {
+    const {value} = action;
+    const dump = update(state.dump, {repeatedBigrams: {$set: value}});
+    return updateWorkspace(state, dump);
+  });
+
   bundle.defineAction('analysisModeChanged', 'Workspace.AnalysisMode.Changed');
   bundle.addReducer('analysisModeChanged', function (state, action) {
     const {value} = action;
@@ -183,7 +191,8 @@ function makeDump (task) {
   const searchCursor = {first: -1, last: -1};
   const filters = {symbols: false, bigrams: false};
   const analysisMode = 'symbols';
-  return {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode};
+  const repeatedBigrams = false;
+  return {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode, repeatedBigrams};
 }
 
 function reconcileDump (task, dump) {
@@ -211,7 +220,8 @@ function updateWorkspace (state, dump) {
   const highlightedLetters = new Map(); // letters → true
 
   /* Hints override user input in the substitution. */
-  const {symbolAttrs} = dump; /* array symbol → {letter, highlight} */
+  const {symbolAttrs, analysisMode, filters} = dump;
+  /* symbolAttrs : array symbol → {letter, highlight} */
   const substitution = new Array(numSymbols);
   for (let symbol = 0; symbol < numSymbols; symbol++) {
     const symbolStr = symbolToDisplayString(symbol);
@@ -229,23 +239,25 @@ function updateWorkspace (state, dump) {
     if (attrs.isLocked) {
       target.isLocked = true;
     }
-    if (typeof attrs.highlight === 'number') {
+    if (analysisMode === 'symbols' && typeof attrs.highlight === 'number') {
       target.highlight = attrs.highlight;
       highlightedSymbols.set(symbolStr, attrs.highlight);
     }
   }
 
-  /* Mark highlighted pairs of symbols and letters. */
-  dump.highlightedBigramSymbols.forEach(function (bigram) {
-    if (isValidSymbolPair(bigram)) {
-      highlightedSymbols.set(bigram, true);
-    }
-  });
-  dump.highlightedBigramLetters.forEach(function (bigram) {
-    if (isValidLetterPair(bigram)) {
-      highlightedLetters.set(bigram, true);
-    }
-  });
+  if (analysisMode === 'bigrams') {
+    /* Mark highlighted pairs of symbols and letters. */
+    dump.highlightedBigramSymbols.forEach(function (bigram) {
+      if (isValidSymbolPair(bigram)) {
+        highlightedSymbols.set(bigram, true);
+      }
+    });
+    dump.highlightedBigramLetters.forEach(function (bigram) {
+      if (isValidLetterPair(bigram)) {
+        highlightedLetters.set(bigram, true);
+      }
+    });
+  }
 
   /* Apply the substitution and highlighting */
   const combinedText = [];
@@ -278,9 +290,17 @@ function updateWorkspace (state, dump) {
   }
 
   // Select and filter analysis.
-  const {analysisMode, filters} = dump;
-  let analysis = state.analysis[analysisMode];
-  if (filters[analysisModeFilter[analysisMode]]) {
+  let analysis;
+  if (analysisMode === 'symbols') {
+    analysis = state.analysis.symbols;
+  } else if (analysisMode === 'bigrams') {
+    if (dump.repeatedBigrams) {
+      analysis = state.analysis.repeatedBigrams;
+    } else {
+      analysis = state.analysis.bigrams;
+    }
+  }
+  if (filters[analysisMode]) {
     analysis = analysis.filter(function (obj) {
       const displayLetters = symbolsToDisplayLetters(substitution, obj.symbolArray);
       return highlightedSymbols.has(obj.symbolString) ||
@@ -291,12 +311,6 @@ function updateWorkspace (state, dump) {
   const workspace = {numSymbols, combinedText, substitution, analysis, ready: true};
   return {...state, dump, workspace};
 }
-
-const analysisModeFilter = {
-  symbols: 'symbols',
-  bigrams: 'bigrams',
-  repeatedBigrams: 'bigrams'
-};
 
 function moveSearchCursor (state, forward, bigrams) {
   const {combinedText} = state.workspace;

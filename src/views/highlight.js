@@ -100,6 +100,9 @@ export const Search = EpicComponent(self => {
 });
 
 export const HighlightAndSearch = EpicComponent(self => {
+  const onChangeMode = function (event) {
+    self.props.onChangeMode(event.target.value);
+  };
   const onChangeFilterSymbols = function (value) {
     self.props.onChangeFilter('symbols', value);
   };
@@ -112,14 +115,20 @@ export const HighlightAndSearch = EpicComponent(self => {
     self.props.onChangeSymbolHighlight(index, highlight);
   };
   self.render = function() {
-    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked} = self.props;
+    const {filters, selectedMode, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked} = self.props;
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
           recherche et filtrage
         </div>
         <div className="panel-body">
-          <div className="symbolHighlightSearch">
+          <div className="analysisChoiceContainer">
+            <select onChange={onChangeMode} value={selectedMode}>
+              <option value="symbols">{"Symboles"}</option>
+              <option value="bigrams">{"Bigrammes"}</option>
+            </select>
+          </div>
+          {selectedMode === 'symbols' && <div className="symbolHighlightSearch">
             <p className="toolDescription">{"Cliquez sur une couleur puis des nombres pour colorer toutes leurs occurrences dans le texte et l'analyse :"}</p>
             <div className="higlightPalette">
               {COLOR_PALETTE.map((hue, index) =>
@@ -139,8 +148,8 @@ export const HighlightAndSearch = EpicComponent(self => {
               </div>
               <Search onClick={onClickSearch} bigrams={false} filter={filters.symbols} onChangeFilter={onChangeFilterSymbols} />
             </div>
-          </div>
-          <div className="bigramsHighlightSearch">
+          </div>}
+          {selectedMode === 'bigrams' && <div className="bigramsHighlightSearch">
             <p className="toolDescription">Entrez jusqu'à {NUM_BIGRAMS_SEARCH} paires de nombres ou de lettres pour colorer leurs occurrences :</p>
             <div className="toolBox">
               <div className="highlightBigramsBox">
@@ -155,7 +164,7 @@ export const HighlightAndSearch = EpicComponent(self => {
               </div>
               <Search onClick={onClickSearch} bigrams={true} filter={filters.bigrams} onChangeFilter={onChangeFilterBigrams} />
             </div>
-          </div>
+          </div>}
         </div>
       </div>
     );

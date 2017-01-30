@@ -59,11 +59,14 @@ const AnalysisBox = EpicComponent(self => {
 });
 
 export const Analysis = EpicComponent(self => {
-  const onChange = function (event) {
+  const onChangeMode = function (event) {
     self.props.onChangeMode(event.target.value);
   };
+  const onChangeRepeatedBigramsFilter = function (event) {
+    self.props.onChangeRepeatedBigramsFilter(event.target.checked);
+  };
   self.render = function() {
-    const {substitution, analysis, selectedMode} = self.props;
+    const {substitution, analysis, selectedMode, repeatedBigrams} = self.props;
     return (
       <div className="panel panel-default analysisView">
         <div className="panel-heading toolHeader">
@@ -71,12 +74,16 @@ export const Analysis = EpicComponent(self => {
         </div>
         <div className="panel-body">
           <div className="analysisChoiceContainer">
-            <select onChange={onChange} value={selectedMode}>
+            <select onChange={onChangeMode} value={selectedMode}>
               <option value="symbols">{"Symboles"}</option>
               <option value="bigrams">{"Bigrammes"}</option>
-              <option value="repeatedBigrams">{"Bigrammes répétés"}</option>
             </select>
           </div>
+          {selectedMode === 'bigrams' &&
+            <label>
+              <input type="checkbox" value={repeatedBigrams} onChange={onChangeRepeatedBigramsFilter}/>
+              {"afficher uniquement les bigrammes répétés"}
+            </label>}
           <div className="analysisBox">
             <table>
               <tbody>

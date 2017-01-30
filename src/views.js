@@ -58,6 +58,10 @@ export const Workspace = actions => EpicComponent(self => {
     self.props.dispatch({type: actions.analysisModeChanged, value});
   };
 
+  const onChangeRepeatedBigramsFilter = function (value) {
+    self.props.dispatch({type: actions.repeatedBigramsFilterChanged, value});
+  };
+
   const onColorPicked = function (index) {
     self.props.dispatch({type: actions.colorPicked, index});
   };
@@ -69,7 +73,7 @@ export const Workspace = actions => EpicComponent(self => {
   self.render = function () {
     const {task, dump, workspace, score, hintRequest, submitAnswer, selectedColorIndex} = self.props;
     const {cipherText, hints} = task;
-    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode} = dump;
+    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode, repeatedBigrams} = dump;
     const {numSymbols, combinedText, substitution, analysis} = workspace;
     return (
       <div className="taskWrapper">
@@ -116,6 +120,8 @@ export const Workspace = actions => EpicComponent(self => {
           substitution={substitution}
           highlightedBigramSymbols={highlightedBigramSymbols}
           highlightedBigramLetters={highlightedBigramLetters}
+          selectedMode={analysisMode}
+          repeatedBigrams={repeatedBigrams}
           filters={filters}
           onColorPicked={onColorPicked}
           onChangeSymbolHighlight={onChangeSymbolHighlight}
@@ -123,10 +129,12 @@ export const Workspace = actions => EpicComponent(self => {
           onBigramLetterChange={onBigramLetterChange}
           onClickSearch={onClickSearch}
           onChangeFilter={onChangeFilter}
+          onChangeMode={onChangeAnalysisMode}
         />
         <Analysis substitution={substitution} analysis={analysis}
           selectedMode={analysisMode}
-          onChangeMode={onChangeAnalysisMode} />
+          onChangeMode={onChangeAnalysisMode}
+          onChangeRepeatedBigramsFilter={onChangeRepeatedBigramsFilter} />
       </div>
     );
   };
