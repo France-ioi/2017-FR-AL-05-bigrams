@@ -274,7 +274,7 @@ function updateWorkspace (state, dump) {
   // Select and filter analysis.
   const {analysisMode, filters} = dump;
   let analysis = state.analysis[analysisMode];
-  if (filters[analysisMode]) {
+  if (filters[analysisModeFilter[analysisMode]]) {
     analysis = analysis.filter(function (obj) {
       const displayLetters = symbolsToDisplayLetters(substitution, obj.symbolArray);
       return highlightedSymbols.has(obj.symbolString) ||
@@ -285,6 +285,12 @@ function updateWorkspace (state, dump) {
   const workspace = {numSymbols, combinedText, substitution, analysis, ready: true};
   return {...state, dump, workspace};
 }
+
+const analysisModeFilter = {
+  symbols: 'symbols',
+  bigrams: 'bigrams',
+  repeatedBigrams: 'bigrams'
+};
 
 function moveSearchCursor (state, forward, bigrams) {
   const {combinedText} = state.workspace;

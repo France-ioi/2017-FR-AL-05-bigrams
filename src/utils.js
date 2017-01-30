@@ -39,7 +39,7 @@ const compareAnalysisCounts = function(object1, object2) {
   return object2.count - object1.count;
 };
 
-export function analyzeAuxiliary(cipherText, bigrams) {
+export function analyzeAuxiliary(cipherText, bigrams, repeated) {
   const info = {};
   function incrementMainCount(symbolArray) {
     const keyString = symbolsToDisplayString(symbolArray);
@@ -64,21 +64,20 @@ export function analyzeAuxiliary(cipherText, bigrams) {
     sideObject[otherSymbol].count++;
   }
 
-  for(let index = 0; index < cipherText.length; index++) {
-    if(bigrams && index === cipherText.length - 1) {
-      break;
-    }
+  const chunkSize = bigrams ? 2 : 1;
+  const lastIndex = cipherText.length - chunkSize;
+  for(let index = 0; index <= lastIndex; index++) {
 
     const symbolArray = [cipherText[index]];
     if(bigrams) {
       symbolArray.push(cipherText[index + 1]);
+      if (repeated && symbolArray[0] !== symbolArray[1]) {
+        continue;
+      }
     }
 
     const indexBefore = index - 1;
-    let indexAfter = index + 1;
-    if(bigrams) {
-      indexAfter = index + 2;
-    }
+    const indexAfter = index + chunkSize;
 
     incrementMainCount(symbolArray);
     if(indexBefore >= 0) {
@@ -126,7 +125,8 @@ export function analyzeAuxiliary(cipherText, bigrams) {
 
 export function analyze(cipherText) {
   return {
-    symbols: analyzeAuxiliary(cipherText, false),
-    bigrams: analyzeAuxiliary(cipherText, true)
+    symbols: analyzeAuxiliary(cipherText, false, false),
+    bigrams: analyzeAuxiliary(cipherText, true, false),
+    repeatedBigrams: analyzeAuxiliary(cipherText, true, true)
   };
 };

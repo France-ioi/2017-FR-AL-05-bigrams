@@ -72,8 +72,9 @@ export const Analysis = EpicComponent(self => {
         <div className="panel-body">
           <div className="analysisChoiceContainer">
             <select onChange={onChange} value={selectedMode}>
-              <option value="symbols">Single symbols</option>
-              <option value="bigrams">Bigrams</option>
+              <option value="symbols">{"Symboles"}</option>
+              <option value="bigrams">{"Bigrammes"}</option>
+              <option value="repeatedBigrams">{"Bigrammes répétés"}</option>
             </select>
           </div>
           <div className="analysisBox">
