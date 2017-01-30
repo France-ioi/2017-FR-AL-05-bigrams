@@ -176,7 +176,7 @@ button + button {
     Tool Search and Highlight
 
 */
-.highlightView .toolDescription {
+.symbolHighlightSearch .toolDescription {
     float: left;
 }
 .higlightPalette {
@@ -197,7 +197,8 @@ button + button {
     border-color: #000;
 }
 .symbolHighlightSearch,
-.bigramsHighlightSearch {
+.bigramsHighlightSearch {}
+.toolBox {
     display: table;
     margin-bottom: 10px;
     clear: both;

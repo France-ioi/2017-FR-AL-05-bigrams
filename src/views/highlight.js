@@ -104,39 +104,43 @@ export const HighlightAndSearch = EpicComponent(self => {
           Search and highlighting
         </div>
         <div className="panel-body">
-          <p className="toolDescription">{"Highlight or search symbols (click to toggle):"}</p>
-          <div className="higlightPalette">
-            <span className="color" style={{backgroundColor: "#e6c319"}}></span>
-            <span className="color selected" style={{backgroundColor: "#19c7e6"}}></span>
-            <span className="color" style={{backgroundColor: "#3fe619"}}></span>
-            <Button>Tout déselectionner</Button>
-          </div>
           <div className="symbolHighlightSearch">
-            <div className="highlightToggleBox">
-              {substitution.map(function(target, index) {
-                const symbol = symbolToDisplayString(index);
-                const letter = letterToDisplayString(target.letter);
-                return <HighlightTogglePair key={index}
-                  index={index} symbol={symbol} letter={letter}
-                  isHint={target.isHint} isHighlighted={target.isHighlighted}
-                  onClick={onHighlightToggle} />;
-              })}
+            <p className="toolDescription">{"Highlight or search symbols (click to toggle):"}</p>
+            <div className="higlightPalette">
+              <span className="color" style={{backgroundColor: "#e6c319"}}></span>
+              <span className="color selected" style={{backgroundColor: "#19c7e6"}}></span>
+              <span className="color" style={{backgroundColor: "#3fe619"}}></span>
+              <Button>Tout déselectionner</Button>
             </div>
-            <Search onClick={onClickSearch} bigrams={false} filter={filters.symbols} onChangeFilter={onChangeFilterSymbols} />
+            <div className="toolBox">
+              <div className="highlightToggleBox">
+                {substitution.map(function(target, index) {
+                  const symbol = symbolToDisplayString(index);
+                  const letter = letterToDisplayString(target.letter);
+                  return <HighlightTogglePair key={index}
+                    index={index} symbol={symbol} letter={letter}
+                    isHint={target.isHint} isHighlighted={target.isHighlighted}
+                    onClick={onHighlightToggle} />;
+                })}
+              </div>
+              <Search onClick={onClickSearch} bigrams={false} filter={filters.symbols} onChangeFilter={onChangeFilterSymbols} />
+            </div>
           </div>
           <div className="bigramsHighlightSearch">
-            <div className="highlightBigramsBox">
-              <p className="toolDescription">Highlight or search up to {NUM_BIGRAMS_SEARCH} bigrams:</p>
-              <span className="toolLabel">By symbols:</span>
-              {highlightedBigramSymbols.map(function(value, index) {
-                return <HighlightBigramSymbol key={index} index={index} value={value} onChange={onBigramSymbolChange} />
-              })}
-              <span className="toolLabel">By decoded letters:</span>
-              {highlightedBigramLetters.map(function(value, index) {
-                return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
-              })}
+            <p className="toolDescription">Highlight or search up to {NUM_BIGRAMS_SEARCH} bigrams:</p>
+            <div className="toolBox">
+              <div className="highlightBigramsBox">
+                <span className="toolLabel">By symbols:</span>
+                {highlightedBigramSymbols.map(function(value, index) {
+                  return <HighlightBigramSymbol key={index} index={index} value={value} onChange={onBigramSymbolChange} />
+                })}
+                <span className="toolLabel">By decoded letters:</span>
+                {highlightedBigramLetters.map(function(value, index) {
+                  return <HighlightBigramLetter key={index} index={index} value={value} onChange={onBigramLetterChange} />
+                })}
+              </div>
+              <Search onClick={onClickSearch} bigrams={true} filter={filters.bigrams} onChangeFilter={onChangeFilterBigrams} />
             </div>
-            <Search onClick={onClickSearch} bigrams={true} filter={filters.bigrams} onChangeFilter={onChangeFilterBigrams} />
           </div>
         </div>
       </div>
