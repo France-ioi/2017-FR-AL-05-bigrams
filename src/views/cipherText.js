@@ -8,15 +8,16 @@ import {SYMBOL_DIGITS, getBackgroundColor} from '../constants';
 
 const CipherTextCharPair = EpicComponent(self => {
   self.render = function() {
-    const {symbol, letter, isHint, isLocked, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props;
+    const {symbol, letter, isHint, isLocked, isSearched, highlight, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props;
     const classes = [
       "cipherTextCharPair", "charPair",
       isHint && "isHint",
       isLocked && "isLocked",
+      hlSymbol && "highlightedSymbol",
       (hlBigramFirst || hlBigramSecond) && "pairHighlightedBigram",
-      self.props.isSearched && "isSearched"
+      isSearched && "isSearched"
     ];
-    const color = getBackgroundColor(hlSymbol, isHint, isLocked);
+    const color = getBackgroundColor(highlight, isHint, isLocked);
     return (
       <div className={classnames(classes)} style={{backgroundColor: color}}>
         <div className="cipherTextSymbol pairTop">

@@ -277,10 +277,13 @@ function updateWorkspace (state, dump) {
       cell.isLocked = true;
     }
     if (highlightedSymbols.has(symbolStr)) {
-      cell.hlSymbol = highlightedSymbols.get(symbolStr);
+      cell.hlSymbol = true;
+      cell.highlight = highlightedSymbols.get(symbolStr);
     }
     if (highlightedSymbols.has(bigramSymbols) || highlightedLetters.has(bigramLetters)) {
+      lastCell.highlight = 0;
       lastCell.hlBigramFirst = true;
+      cell.highlight = 0;
       cell.hlBigramSecond = true;
     }
     combinedText.push(cell);

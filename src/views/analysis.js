@@ -3,9 +3,11 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
+
 import {
   symbolToDisplayString, letterToDisplayString,
   symbolsToDisplayLetters} from '../utils';
+import {getBackgroundColor} from '../constants';
 
 const AnalysisTriplet = EpicComponent(self => {
   self.render = function() {
@@ -25,19 +27,18 @@ const AnalysisTriplet = EpicComponent(self => {
 const AnalysisSymbolTriplet = EpicComponent(self => {
   self.render = function() {
     const {symbol, substitution, count} = self.props;
-    const target = substitution[symbol];
+    const {letter, isHint, highlight} = substitution[symbol];
     const symbolStr = symbolToDisplayString(symbol);
-    const letter = letterToDisplayString(target.letter);
+    const letterStr = letterToDisplayString(letter);
     const classes = [
-      "analysisCharPair", "charPair",
-      target.isHighlighted && "pairHighlightedToggle",
-      target.isHint && "isHint"
+      "analysisCharPair", "charPair", isHint && "isHint"
     ];
+    const color = getBackgroundColor(highlight, isHint, false);
     return (
-      <div className="analysisTriplet">
+      <div className="analysisTriplet" style={{backgroundColor: color}}>
         <div className={classnames(classes)}>
           <div className="pairTop">{symbolStr}</div>
-          <div className="pairBottom">{letter}</div>
+          <div className="pairBottom">{letterStr}</div>
         </div>
         {count}{"x"}
       </div>
