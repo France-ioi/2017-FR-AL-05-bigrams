@@ -4,7 +4,7 @@ import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
 import {letterToDisplayString, symbolToDisplayString} from '../utils';
-import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS, COLOR_PALETTE} from '../constants';
+import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS, COLOR_PALETTE, getBackgroundColor} from '../constants';
 
 const ColorPickerItem = EpicComponent(self => {
   const onClick = function() {
@@ -21,17 +21,15 @@ const ColorPickerItem = EpicComponent(self => {
 
 const HighlightTogglePair = EpicComponent(self => {
   const onClick = function() {
-    self.props.onClick(self.props.index);
+    const {index, highlight} = self.props;
+    self.props.onClick(index, highlight);
   };
   self.render = function() {
-    const {symbol, letter, isHighlighted, isHint} = self.props;
-    const classes = [
-      "highlightCharPair", "charPair",
-      isHighlighted && "highlightCharPairSelected",
-      isHint && "isHint"
-    ];
+    const {symbol, letter, highlight, isHint} = self.props;
+    const classes = ["highlightCharPair", "charPair"];
+    const color = getBackgroundColor(highlight, isHint, false);
     return (
-      <div className={classnames(classes)} onClick={onClick}>
+      <div className={classnames(classes)} onClick={onClick} style={{backgroundColor: color}}>
         <div className="highlightSymbol pairTop">
           {symbol}
         </div>
@@ -108,8 +106,12 @@ export const HighlightAndSearch = EpicComponent(self => {
   const onChangeFilterBigrams = function (value) {
     self.props.onChangeFilter('bigrams', value);
   };
+  const onChangeSymbolHighlight = function (index, current) {
+    const highlight = typeof current === 'number' ? false : self.props.selectedColorIndex;
+    self.props.onChangeSymbolHighlight(index, highlight);
+  };
   self.render = function() {
-    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked} = self.props;
+    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked} = self.props;
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
@@ -130,8 +132,8 @@ export const HighlightAndSearch = EpicComponent(self => {
                   const letter = letterToDisplayString(target.letter);
                   return <HighlightTogglePair key={index}
                     index={index} symbol={symbol} letter={letter}
-                    isHint={target.isHint} isHighlighted={target.isHighlighted}
-                    onClick={onHighlightToggle} />;
+                    isHint={target.isHint} highlight={target.highlight}
+                    onClick={onChangeSymbolHighlight} />;
                 })}
               </div>
               <Search onClick={onClickSearch} bigrams={false} filter={filters.symbols} onChangeFilter={onChangeFilterSymbols} />

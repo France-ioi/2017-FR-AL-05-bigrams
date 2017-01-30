@@ -32,8 +32,8 @@ export const Workspace = actions => EpicComponent(self => {
     self.props.dispatch({type: actions.lockSymbol, index, value});
   };
 
-  const onHighlightToggle = function(index, letter) {
-    self.props.dispatch({type: actions.toggleHighlight, index});
+  const onChangeSymbolHighlight = function (symbol, highlight) {
+    self.props.dispatch({type: actions.changeSymbolHighlight, symbol, highlight});
   };
 
   const onBigramSymbolChange = function(index, value) {
@@ -118,7 +118,7 @@ export const Workspace = actions => EpicComponent(self => {
           highlightedBigramLetters={highlightedBigramLetters}
           filters={filters}
           onColorPicked={onColorPicked}
-          onHighlightToggle={onHighlightToggle}
+          onChangeSymbolHighlight={onChangeSymbolHighlight}
           onBigramSymbolChange={onBigramSymbolChange}
           onBigramLetterChange={onBigramLetterChange}
           onClickSearch={onClickSearch}

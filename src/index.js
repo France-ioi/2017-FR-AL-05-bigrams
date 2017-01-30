@@ -44,7 +44,7 @@ function TaskBundle (bundle, deps) {
   /* The 'Workspace' view displays the main task view to the contestant. */
   const WorkspaceActions = bundle.pack(
     'showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback',
-    'changeSubstitution', 'lockSymbol', 'toggleHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
+    'changeSubstitution', 'lockSymbol', 'changeSymbolHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
     'onSearch', 'filterChanged', 'analysisModeChanged', 'setTextBoxInterface', 'colorPicked');
   function WorkspaceSelector (state, props) {
     const {score, task, dump, workspace, hintRequest, submitAnswer, selectedColorIndex} = state;
@@ -92,12 +92,12 @@ function TaskBundle (bundle, deps) {
     return updateWorkspace(state, dump);
   });
 
-  /* toggleHighlight {index} updates the toggle state accordingly. */
-  bundle.defineAction('toggleHighlight', 'Workspace.ToggleHighlight');
-  bundle.addReducer('toggleHighlight', function highlightToggleChangeReducer (state, action) {
-    const {index} = action;
+  /* setHighlightHue {index} sets the highlight color (or false to clear) */
+  bundle.defineAction('changeSymbolHighlight', 'Workspace.ChangeSymbolHighlight');
+  bundle.addReducer('changeSymbolHighlight', function (state, action) {
+    const {symbol, highlight} = action;
     const dump = update(state.dump, {
-      symbolAttrs: {[index]: {highlight: {$apply: b => !b}}}});
+      symbolAttrs: {[symbol]: {highlight: {$set: highlight}}}});
     return updateWorkspace(state, dump);
   });
 
@@ -229,8 +229,8 @@ function updateWorkspace (state, dump) {
     if (attrs.isLocked) {
       target.isLocked = true;
     }
-    if (attrs.highlight) {
-      target.isHighlighted = true;
+    if (typeof attrs.highlight === 'number') {
+      target.highlight = attrs.highlight;
       highlightedSymbols.set(symbolStr, true);
     }
   }
