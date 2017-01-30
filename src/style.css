@@ -240,6 +240,7 @@ button + button {
 }
 .isSearched {
     border: 2px solid red;
+    margin: -1px 1px 9px -1px;
 }
 .bigramsHighlightSearch .toolLabel {
     display: inline-block;
