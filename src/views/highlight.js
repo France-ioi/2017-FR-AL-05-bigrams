@@ -105,6 +105,12 @@ export const HighlightAndSearch = EpicComponent(self => {
         </div>
         <div className="panel-body">
           <p className="toolDescription">{"Highlight or search symbols (click to toggle):"}</p>
+          <div className="higlightPalette">
+            <span className="color" style={{backgroundColor: "#e6c319"}}></span>
+            <span className="color selected" style={{backgroundColor: "#19c7e6"}}></span>
+            <span className="color" style={{backgroundColor: "#3fe619"}}></span>
+            <Button>Tout déselectionner</Button>
+          </div>
           <div className="symbolHighlightSearch">
             <div className="highlightToggleBox">
               {substitution.map(function(target, index) {

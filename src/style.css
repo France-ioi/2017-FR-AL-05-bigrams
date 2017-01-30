@@ -169,15 +169,37 @@ button + button {
 .substitutionLetterInput[readonly] {
     border: 1px solid #eee;
 }
+
 /*
 
     Tool Search and Highlight
 
 */
+.highlightView .toolDescription {
+    float: left;
+}
+.higlightPalette {
+    float: right;
+    margin-bottom: 10px;
+}
+.higlightPalette .color {
+    display: inline-block;
+    width: 30px;
+    height: 30px;
+    margin-right: 3px;
+    border: 2px solid #fff;
+    border-radius: 4px;
+    cursor: pointer;
+    vertical-align: middle;
+}
+.higlightPalette .color.selected {
+    border-color: #000;
+}
 .symbolHighlightSearch,
 .bigramsHighlightSearch {
     display: table;
     margin-bottom: 10px;
+    clear: both;
 }
 .highlightToggleBox,
 .highlightBigramsBox {
