@@ -274,3 +274,9 @@ td.analysisBox-labels {
     font-weight: normal;
     padding: 0 2px;
 }
+
+/* Temporary rules */
+
+.charPair.isHint {
+    background-color: #eee;
+}

@@ -8,9 +8,10 @@ import {SYMBOL_DIGITS} from '../constants';
 
 const CipherTextCharPair = EpicComponent(self => {
   self.render = function() {
-    const {symbol, letter, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props.cell;
+    const {symbol, letter, isHint, hlSymbol, hlBigramFirst, hlBigramSecond} = self.props;
     const classes = [
       "cipherTextCharPair", "charPair",
+      isHint && "isHint",
       hlSymbol && "pairHighlightedToggle",
       (hlBigramFirst || hlBigramSecond) && "pairHighlightedBigram",
       self.props.isSearched && "isSearched"
@@ -54,7 +55,7 @@ export const CipherTextView = EpicComponent(self => {
           <div className="cipherTextBox" ref={refTextBox}>
             {combinedText.map(function(symbol, index) {
               const isSearched = index >= searchCursor.first && index <= searchCursor.last;
-              return <CipherTextCharPair key={index} cell={combinedText[index]} isSearched={isSearched} />;
+              return <CipherTextCharPair key={index} isSearched={isSearched} {...combinedText[index]} />;
             })}
           </div>
         </div>

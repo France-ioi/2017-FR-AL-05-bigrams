@@ -36,7 +36,7 @@ const SubstitutionEditHint = EpicComponent(self => {
   self.render = function() {
     const {symbol, letter} = self.props;
     return (
-      <div className="substitutionEditCharPair charPair">
+      <div className="substitutionEditCharPair charPair isHint">
         <div className="substitutionEditSymbol pairTop">
           {symbol}
         </div>

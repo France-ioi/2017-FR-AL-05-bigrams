@@ -28,7 +28,11 @@ const AnalysisSymbolTriplet = EpicComponent(self => {
     const target = substitution[symbol];
     const symbolStr = symbolToDisplayString(symbol);
     const letter = letterToDisplayString(target.letter);
-    const classes = ["analysisCharPair", "charPair", target.isHighlighted && "pairHighlightedToggle"];
+    const classes = [
+      "analysisCharPair", "charPair",
+      target.isHighlighted && "pairHighlightedToggle",
+      target.isHint && "isHint"
+    ];
     return (
       <div className="analysisTriplet">
         <div className={classnames(classes)}>

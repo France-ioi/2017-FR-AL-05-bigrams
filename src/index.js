@@ -241,6 +241,9 @@ function updateWorkspace (state, dump) {
     const bigramSymbols = lastSymbol + symbolStr;
     const bigramLetters = `${letterToDisplayString(lastLetter)}${letterToDisplayString(letter)}`;
     const cell = {index: iSymbol, symbol: symbolStr, letter};
+    if (target.isHint) {
+      cell.isHint = true;
+    }
     if (highlightedSymbols.has(symbolStr) || letter && highlightedLetters.has(letter)) {
       cell.hlSymbol = true;
     }
