@@ -108,6 +108,7 @@ export const Workspace = actions => EpicComponent(self => {
           combinedText={combinedText} searchCursor={searchCursor}
           setTextBoxInterface={setTextBoxInterface} />
         <HighlightAndSearch
+          selectedColorIndex={0}
           substitution={substitution}
           highlightedBigramSymbols={highlightedBigramSymbols}
           highlightedBigramLetters={highlightedBigramLetters}

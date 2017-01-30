@@ -4,7 +4,7 @@ import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
 import {letterToDisplayString, symbolToDisplayString} from '../utils';
-import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS} from '../constants';
+import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS, COLOR_PALETTE} from '../constants';
 
 const HighlightTogglePair = EpicComponent(self => {
   const onClick = function() {
@@ -96,7 +96,7 @@ export const HighlightAndSearch = EpicComponent(self => {
     self.props.onChangeFilter('bigrams', value);
   };
   self.render = function() {
-    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch} = self.props;
+    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex} = self.props;
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
@@ -106,9 +106,9 @@ export const HighlightAndSearch = EpicComponent(self => {
           <div className="symbolHighlightSearch">
             <p className="toolDescription">{"Cliquez sur une couleur puis des nombres pour colorer toutes leurs occurrences dans le texte et l'analyse :"}</p>
             <div className="higlightPalette">
-              <span className="color" style={{backgroundColor: "#e6c319"}}></span>
-              <span className="color selected" style={{backgroundColor: "#19c7e6"}}></span>
-              <span className="color" style={{backgroundColor: "#3fe619"}}></span>
+              {COLOR_PALETTE.map(function (hue, index) {
+                return <span key={index} className={classnames(['color', index === selectedColorIndex && 'selected'])} style={{backgroundColor: hue[1]}}/>;
+              })}
               <Button>Tout déselectionner</Button>
             </div>
             <div className="toolBox">
