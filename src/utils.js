@@ -19,7 +19,7 @@ export function isValidLetterPair (bigram) {
 };
 
 export function letterToDisplayString(letter) {
-  return letter === null ? '?' : letter;
+  return letter === null ? '\xA0' : letter;
 };
 
 export function symbolsToDisplayLetters(substitution, symbols) {
