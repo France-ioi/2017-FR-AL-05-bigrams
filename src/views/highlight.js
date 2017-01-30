@@ -6,6 +6,19 @@ import EpicComponent from 'epic-component';
 import {letterToDisplayString, symbolToDisplayString} from '../utils';
 import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS, COLOR_PALETTE} from '../constants';
 
+const ColorPickerItem = EpicComponent(self => {
+  const onClick = function() {
+    self.props.onClick(self.props.index);
+  };
+  self.render = function() {
+    const {hue, selected} = self.props;
+    const classes = ['color', selected && 'selected'];
+    return (
+      <span className={classnames(classes)}
+        style={{backgroundColor: hue[1]}} onClick={onClick} />);
+  };
+});
+
 const HighlightTogglePair = EpicComponent(self => {
   const onClick = function() {
     self.props.onClick(self.props.index);
@@ -96,7 +109,7 @@ export const HighlightAndSearch = EpicComponent(self => {
     self.props.onChangeFilter('bigrams', value);
   };
   self.render = function() {
-    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex} = self.props;
+    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onHighlightToggle, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked} = self.props;
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
@@ -106,9 +119,8 @@ export const HighlightAndSearch = EpicComponent(self => {
           <div className="symbolHighlightSearch">
             <p className="toolDescription">{"Cliquez sur une couleur puis des nombres pour colorer toutes leurs occurrences dans le texte et l'analyse :"}</p>
             <div className="higlightPalette">
-              {COLOR_PALETTE.map(function (hue, index) {
-                return <span key={index} className={classnames(['color', index === selectedColorIndex && 'selected'])} style={{backgroundColor: hue[1]}}/>;
-              })}
+              {COLOR_PALETTE.map((hue, index) =>
+                <ColorPickerItem key={index} index={index} hue={hue} selected={selectedColorIndex == index} onClick={onColorPicked} />)}
               <Button>Tout déselectionner</Button>
             </div>
             <div className="toolBox">

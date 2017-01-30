@@ -31,7 +31,7 @@ function TaskBundle (bundle, deps) {
 
   /* The 'init' action sets the workspace operations in the global state. */
   bundle.addReducer('init', function (state, action) {
-    return {...state, workspaceOperations};
+    return {...state, workspaceOperations, selectedColorIndex: 0};
   });
 
   /* The 'Task' view displays the task introduction to the contestant. */
@@ -45,10 +45,10 @@ function TaskBundle (bundle, deps) {
   const WorkspaceActions = bundle.pack(
     'showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback',
     'changeSubstitution', 'lockSymbol', 'toggleHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
-    'onSearch', 'filterChanged', 'analysisModeChanged', 'setTextBoxInterface');
+    'onSearch', 'filterChanged', 'analysisModeChanged', 'setTextBoxInterface', 'colorPicked');
   function WorkspaceSelector (state, props) {
-    const {score, task, dump, workspace, hintRequest, submitAnswer} = state;
-    return {score, task, dump, workspace, hintRequest, submitAnswer: submitAnswer || {}};
+    const {score, task, dump, workspace, hintRequest, submitAnswer, selectedColorIndex} = state;
+    return {score, task, dump, workspace, hintRequest, submitAnswer: submitAnswer || {}, selectedColorIndex};
   }
   bundle.defineView('Workspace', WorkspaceSelector, Workspace(WorkspaceActions));
 
@@ -164,6 +164,12 @@ function TaskBundle (bundle, deps) {
   bundle.defineAction('setTextBoxInterface', 'Workspace.TextBox.SetInterface');
   bundle.addReducer('setTextBoxInterface', function (state, action) {
     return {...state, textBoxInterface: action.intf};
+  });
+
+  bundle.defineAction('colorPicked', 'Workspace.Color.Picked');
+  bundle.addReducer('colorPicked', function (state, action) {
+    const {index} = action;
+    return {...state, selectedColorIndex: index};
   });
 
 }

@@ -58,12 +58,16 @@ export const Workspace = actions => EpicComponent(self => {
     self.props.dispatch({type: actions.analysisModeChanged, value});
   };
 
+  const onColorPicked = function (index) {
+    self.props.dispatch({type: actions.colorPicked, index});
+  };
+
   const setTextBoxInterface = function (intf) {
     self.props.dispatch({type: actions.setTextBoxInterface, intf});
   };
 
   self.render = function () {
-    const {task, dump, workspace, score, hintRequest, submitAnswer} = self.props;
+    const {task, dump, workspace, score, hintRequest, submitAnswer, selectedColorIndex} = self.props;
     const {cipherText, hints} = task;
     const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode} = dump;
     const {numSymbols, combinedText, substitution, analysis} = workspace;
@@ -108,11 +112,12 @@ export const Workspace = actions => EpicComponent(self => {
           combinedText={combinedText} searchCursor={searchCursor}
           setTextBoxInterface={setTextBoxInterface} />
         <HighlightAndSearch
-          selectedColorIndex={0}
+          selectedColorIndex={selectedColorIndex}
           substitution={substitution}
           highlightedBigramSymbols={highlightedBigramSymbols}
           highlightedBigramLetters={highlightedBigramLetters}
           filters={filters}
+          onColorPicked={onColorPicked}
           onHighlightToggle={onHighlightToggle}
           onBigramSymbolChange={onBigramSymbolChange}
           onBigramLetterChange={onBigramLetterChange}
