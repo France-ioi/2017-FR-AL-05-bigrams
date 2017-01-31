@@ -72,7 +72,7 @@ function generate (params, seed, callback) {
   const baseScore = baseScoreByVersion[version];
   const hintCost = hintCostByVersion[version];
   const rng = seedrandom(seed);
-  const minLength = 2000;
+  const minLength = 6000;
   const maxLength = minLength + 50;
   const clearSymbols = getClearSymbols(version === 1 ? easyCardinalities : difficultCardinalities);
   const decipherSubst = shuffle(clearSymbols, {copy: true, rng: rng});
