@@ -17,6 +17,7 @@
 }
 .taskInstructions table.pre td {
     padding: 4px 10px;
+    text-align: center;
 }
 .taskInstructions .list-unstyled {
     padding-left: 30px;
