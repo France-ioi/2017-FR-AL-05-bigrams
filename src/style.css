@@ -19,8 +19,12 @@
     padding: 4px 10px;
     text-align: center;
 }
-.taskInstructions .list-unstyled {
-    padding-left: 30px;
+.taskInstructions img {
+  display: block;
+  margin: 20px auto;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 2px 2px 5px #ccc;
 }
 .text-bold {
     font-weight: bold;
