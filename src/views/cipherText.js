@@ -33,6 +33,15 @@ const CipherTextCharPair = EpicComponent(self => {
 
 export const CipherTextView = EpicComponent(self => {
 
+  let textBoxElement;
+
+  self.state = {
+    firstVisibleLine: 0,
+    symbolsPerLine: 23,
+    lineHeight: 64,
+    visibleLines: 6
+  };
+
   const defaultCipherAttrs = {highlight: false};
 
   function refTextBox (element) {
@@ -40,11 +49,26 @@ export const CipherTextView = EpicComponent(self => {
       const childElement = element.children[index];
       element.scrollTop = childElement.offsetTop - element.offsetTop - (element.clientHeight / 2);
     }
+    textBoxElement = element;
     self.props.setTextBoxInterface(element && {scrollToPosition});
   }
 
+  function onScroll (event) {
+    const {lineHeight} = self.state;
+    const firstVisibleLine = Math.trunc(textBoxElement.scrollTop / lineHeight);
+    self.setState({firstVisibleLine});
+  }
+
+  /*
+    - line height : 54 px
+    - boxes per line : 23
+    - 5 lines displayed
+  */
   self.render = function() {
     const {combinedText, searchCursor} = self.props;
+    const {scrolling, firstVisibleLine, symbolsPerLine, lineHeight, visibleLines} = self.state;
+    const bottom = (Math.trunc(combinedText.length / symbolsPerLine) + 1) * lineHeight;
+    const lines = extractLines(combinedText, firstVisibleLine, visibleLines, symbolsPerLine);
     return (
       <div className="panel panel-default cipherTextView">
         <div className="panel-heading toolHeader">
@@ -54,14 +78,36 @@ export const CipherTextView = EpicComponent(self => {
           <p className="toolDescription">
             Voici le texte chiffré et sous chaque nombre la lettre correspondante selon votre substitution.
           </p>
-          <div className="cipherTextBox" ref={refTextBox}>
-            {combinedText.map(function(symbol, index) {
-              const isSearched = index >= searchCursor.first && index <= searchCursor.last;
-              return <CipherTextCharPair key={index} isSearched={isSearched} {...combinedText[index]} />;
+          <div className="cipherTextBox" ref={refTextBox} onScroll={onScroll} style={{position: 'relative'}}>
+            {lines.map(function (line) {
+              const {firstCellIndex, lineNumber, cells} = line;
+              return (
+                <div key={lineNumber} className="cipherTextLine" style={{position: 'absolute', top: `${lineNumber*lineHeight}px`}}>
+                  {cells.map(function(cell, iCell) {
+                    const isSearched = firstCellIndex + iCell >= searchCursor.first && firstCellIndex + iCell <= searchCursor.last;
+                    return <CipherTextCharPair key={iCell} isSearched={isSearched} {...cell} />;
+                  })}
+                </div>
+              );
             })}
+            <div style={{position: 'absolute', top: `${bottom}px`, width: '1px', height: '1px'}}/>
           </div>
         </div>
       </div>
     );
   };
 });
+
+function extractLines (cells, firstVisibleLine, visibleLines, symbolsPerLine) {
+  const lines = [];
+  let iCell = firstVisibleLine * symbolsPerLine;
+  for (let iLine = 0; iLine < visibleLines; iLine += 1) {
+    lines.push({
+      firstCellIndex: iCell,
+      lineNumber: firstVisibleLine + iLine,
+      cells: cells.slice(iCell, iCell + symbolsPerLine)
+    });
+    iCell += symbolsPerLine;
+  }
+  return lines;
+}
