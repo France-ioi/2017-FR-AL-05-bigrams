@@ -1,9 +1,13 @@
 import React from 'react';
 import EpicComponent from 'epic-component';
+import url from 'url';
 
 const Task1 = EpicComponent(self => {
 
   self.render = function () {
+    function asset (path) {
+      return url.resolve(self.props.baseUrl, path);
+    }
     return (
       <div className="taskInstructions">
         <h1>Substitution polyalphabétique 1</h1>
@@ -107,18 +111,18 @@ const Task1 = EpicComponent(self => {
         <h3>1) Éditer la substitution :</h3>
         <p>Sous chaque nombre, vous pouvez cliquer et taper au clavier la lettre qui à votre avis est représentée par ce nombre.</p>
 
-        <img src="images/substitutionTool.png" alt="substitutions" />
+        <img src={asset("images/substitutionTool.png")} alt="substitutions" />
 
         <p>Elle sera alors représentée sous toutes les occurrences de ce nombre dans le reste de la page.</p>
 
-        <img src="images/textTool.png" alt="texte chiffré et déchiffré" />
+        <img src={asset("images/textTool.png")} alt="texte chiffré et déchiffré" />
 
         <p>Lorsque vous êtes convaincu qu'il s'agit de la bonne lettre, vous pouvez cliquer sur le cadenas pour la bloquer et éviter de la modifier par erreur. Ceci a pour effet d’assombrir toutes les occurrences du nombre et de la lettre.</p>
 
         <h3>2) Obtenir des indices :</h3>
         <p>Si vous cliquez simplement sur un nombre, vous pouvez demander en indice, la lettre correspondant à ce nombre, pour un coût de XX points.</p>
 
-        <img src="images/hints.png" alt="substitution : obtenir des indices" />
+        <img src={asset("images/hints.png")} alt="substitution : obtenir des indices" />
 
         <p>Une fois l'indice obtenu, la lettre est représentée sous toutes les occurrences de ce nombre, et la case est mise sur fond plus foncé pour bien les distinguer.</p>
 
@@ -127,7 +131,7 @@ const Task1 = EpicComponent(self => {
         <p>Cet outil vous permet de chercher des nombres, lettres, paires de nombres et paires de lettres dans le texte chiffré ou déchiffré.</p>
         <p>Dans la zone du haut, une liste de tous les nombres du texte chiffré est fournie, et les lettres déchiffrées lorsqu'elles sont disponibles.</p>
 
-        <img src="images/searchToolSymbols.png" alt="recherche : couleurs et symboles" />
+        <img src={asset("images/searchToolSymbols.png")} alt="recherche : couleurs et symboles" />
 
         <p>On peut colorer certains de ces nombres en cliquant sur la palette pour choisir une couleur, puis sur le nombre que l'on veut colorer. Toutes les occurrences de ce nombre sur la page seront ainsi colorées. On peut colorer simultanément plusieurs nombres, de la même couleur ou de couleurs différentes. Cliquer sur un nombre coloré de l'outil permet de désactiver sa couleur.</p>
         <p>Les cases correspondant à des indices et celles correspondant à des valeurs bloquées sont représentées avec une version plus foncée de la couleur choisie, pour pouvoir les distinguer.</p>
@@ -135,21 +139,21 @@ const Task1 = EpicComponent(self => {
         <p>La case "Filtrer dans l'analyse" affecte l'affichage de l'outil d'analyse, comme décrit plus bas.</p>
         <p>Dans la zone du bas, on s'intéresse aux paires consécutives de nombres ou lettres. On peut ainsi saisir jusqu'à 6 paires de nombres, ou "bigrammes", pour faire apparaître ou rechercher dans le texte chiffré toutes les positions où ces deux nombres apparaissent successivement dans le texte. De même, on peut saisir jusqu'à 6 paires de lettres à faire apparaître ou rechercher.</p>
 
-        <img src="images/searchToolPairs.png" alt="recherche : paires de symboles et paires de lettres" />
+        <img src={asset("images/searchToolPairs.png")} alt="recherche : paires de symboles et paires de lettres" />
 
         <h2>Analyse</h2>
 
         <p>Deux modes sont disponibles via la liste déroulante : simple et double.</p>
         <p>Dans le mode simple, l'outil sélectionne les 20 nombres les plus fréquents du texte, et les représente au milieu, du plus fréquent au moins fréquent, avec le nombre d'occurrences indiqué en dessous.</p>
 
-        <img src="images/analysisToolSymbols.png" alt="analyse : symboles" />
+        <img src={asset("images/analysisToolSymbols.png")} alt="analyse : symboles" />
 
         <p>À la gauche de chaque nombre, on indique quels nombres apparaissent le plus fréquemment juste avant lui. À sa droite, ceux qui apparaissent le plus fréquemment juste après.</p>
         <p>Ainsi dans l’exemple ci-dessous, le nombre 30 est le plus fréquent dans le texte, où il apparaît 74 fois. Le nombre le plus fréquent à sa gauche est 26, la paire 2630 apparaissant 7 fois dans le texte. De même, le nombre le plus fréquemment à sa droite est 16, et la paire 3016 apparaît 10 fois dans le texte.</p>
         <p>Si la case d’activation du filtrage a été activée dans la partie du haut de l’outil de recherche, seuls les nombres sélectionnés dans cet outil sont considérés. Le filtrage ne s’applique qu’au nombre principal au milieu, les tableaux des deux côtés restent affichés entièrement.</p>
         <p>Dans le mode double, l’outil sélectionne les 20 paires de nombres (bigrammes) les plus fréquents dans le texte, par ordre décroissant de cette fréquence. Là aussi on représente les symboles qui apparaissent le plus fréquemment juste avant et juste après chaque paire.</p>
 
-        <img src="images/analysisToolSymbolsPairs.png" alt="analyse : paires de symboles" />
+        <img src={asset("images/analysisToolSymbolsPairs.png")} alt="analyse : paires de symboles" />
 
         <p>Dans cet exemple, la paire de nombres la plus fréquente est 2141, et le nombre qui la précède le plus souvent est 17, tandis que celui qui la suit le plus souvent est 05.</p>
         <p>Si le filtrage a été activé dans la partie du bas de l’outil de recherche, seuls les bigrammes indiqués dans cet outils sont représentés.</p>
