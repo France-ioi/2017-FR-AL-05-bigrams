@@ -12,20 +12,6 @@ import {Analysis} from './views/analysis';
 
 export const Workspace = actions => EpicComponent(self => {
 
-  /*
-  self.state = {dragging: false, dropOutside: false};
-
-  const onKeyChange = function (index, direction) {
-    const {key} = self.props.workspace;
-    self.props.dispatch({type: actions.keyChange, index, direction});
-  };
-
-  const onMouseDown = function (cipherIndex, charIndex) {
-    if (!self.props.task.plainWord) return;
-    self.setState({dragging: true, dropOutside: false});
-    self.props.dispatch({type: actions.setPlainWordPosition, cipherIndex, charIndex});
-  };*/
-
   const onSubstitutionChange = function(index, letter) {
     self.props.dispatch({type: actions.changeSubstitution, index, letter});
   };
