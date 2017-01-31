@@ -46,8 +46,8 @@ export const CipherTextView = EpicComponent(self => {
 
   function refTextBox (element) {
     function scrollToPosition (index) {
-      const childElement = element.children[index];
-      element.scrollTop = childElement.offsetTop - element.offsetTop - (element.clientHeight / 2);
+      const lineNumber = Math.trunc(index / self.state.symbolsPerLine);
+      element.scrollTop = Math.max(0, lineNumber * self.state.lineHeight - (element.clientHeight / 2));
     }
     textBoxElement = element;
     self.props.setTextBoxInterface(element && {scrollToPosition});
