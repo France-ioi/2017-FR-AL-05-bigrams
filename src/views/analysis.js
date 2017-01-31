@@ -59,15 +59,56 @@ const AnalysisBox = EpicComponent(self => {
   };
 });
 
+const SymbolAnalysisRow = EpicComponent(self => {
+  self.render = function() {
+    const {top, substitution, symbolString, symbolArray, count, before, after} = self.props;
+    const displayLetters = symbolsToDisplayLetters(substitution, symbolArray);
+    return (
+      <div className="analysisBox-row" style={{position: 'absolute', top: `${top}px`}}>
+        <div className="analysisBox-before">
+          <AnalysisBox array={before} substitution={substitution} />
+        </div>
+        <div className="analysisBox-center">
+          <AnalysisTriplet symbols={symbolString} letters={displayLetters} count={count} />
+        </div>
+        <div className="analysisBox-after">
+          <AnalysisBox array={after} substitution={substitution} />
+        </div>
+      </div>
+    );
+  };
+});
+
 export const Analysis = EpicComponent(self => {
-  const onChangeMode = function (event) {
+
+  let scrollBoxElement;
+  const rowHeight = 80;
+  const visibleRowCount = 5;
+
+  function onChangeMode (event) {
     self.props.onChangeMode(event.target.value);
-  };
-  const onChangeRepeatedBigramsFilter = function (event) {
+  }
+
+  function onChangeRepeatedBigramsFilter (event) {
     self.props.onChangeRepeatedBigramsFilter(event.target.checked);
-  };
+  }
+
+  function refScrollBox (element) {
+    scrollBoxElement = element;
+  }
+
+  function onScroll (event) {
+    const firstVisibleRow = Math.trunc(scrollBoxElement.scrollTop / rowHeight);
+    self.setState({firstVisibleRow});
+  }
+
+  self.state = {firstVisibleRow: 0};
+
   self.render = function() {
     const {substitution, analysis, selectedMode, repeatedBigrams} = self.props;
+    const {firstVisibleRow} = self.state;
+    const visibleRows = analysis.slice(firstVisibleRow, firstVisibleRow + visibleRowCount);
+    const bottom = analysis.length * rowHeight;
     return (
       <div className="panel panel-default analysisView">
         <div className="panel-heading toolHeader">
@@ -85,25 +126,12 @@ export const Analysis = EpicComponent(self => {
                 {"afficher uniquement les bigrammes répétés"}
               </label>}
           </div>
-          <div className="analysisBox">
-            <div className="analysisBox-label">Nombres qui précèdent le plus fréquemment :</div>
-            <div className="analysisBox-label">Nombres qui suivent le plus fréquemment :</div>
-              {analysis.map(function(symbolAnalysis, index) {
-                const displayLetters = symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray);
-                return (
-                  <div key={index} className="analysisBox-row">
-                    <div className="analysisBox-before">
-                      <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
-                    </div>
-                    <div className="analysisBox-center">
-                      <AnalysisTriplet symbols={symbolAnalysis.symbolString} letters={displayLetters} count={symbolAnalysis.count} />
-                    </div>
-                    <div className="analysisBox-after">
-                      <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />
-                    </div>
-                  </div>
-                );
-              })}
+          <div className="analysisBox-label">Nombres qui précèdent le plus fréquemment :</div>
+          <div className="analysisBox-label">Nombres qui suivent le plus fréquemment :</div>
+          <div className="analysisBox" style={{position: 'relative'}} ref={refScrollBox} onScroll={onScroll}>
+            {visibleRows.map((content, index) =>
+              <SymbolAnalysisRow key={firstVisibleRow + index} top={(firstVisibleRow + index) * rowHeight} substitution={substitution} {...content} />)}
+            <div style={{position: 'absolute', top: `${bottom}px`, width: '1px', height: '1px'}}/>
           </div>
         </div>
       </div>

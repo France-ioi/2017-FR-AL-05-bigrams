@@ -323,8 +323,6 @@ function updateWorkspace (state, dump) {
         highlightedLetters.has(displayLetters);
     });
   }
-  const maxAnalysisResults = 20;
-  analysis = analysis.slice(0, maxAnalysisResults);
 
   const workspace = {numSymbols, combinedText, substitution, analysis, ready: true};
   return {...state, dump, workspace};
