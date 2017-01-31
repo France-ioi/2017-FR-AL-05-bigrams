@@ -42,14 +42,44 @@ const HighlightTogglePair = EpicComponent(self => {
 });
 
 export const HighlightBigramSymbol = EpicComponent(self => {
-  const onChange = function(event) {
-    self.props.onChange(self.props.index, event.target.value);
-  };
+  let input1, input2;
+  function refInput1 (element) { input1 = element; }
+  function refInput2 (element) { input2 = element; }
+  function onKeyPress (event) {
+    if (event.target === input1 && input1.value.length === 1) {
+      input2.setSelectionRange(0, SYMBOL_DIGITS);
+      input2.focus();
+    }
+  }
+  function onKeyDown (event) {
+    if (event.target === input1) {
+      if (event.keyCode === 39 && input1.selectionStart === SYMBOL_DIGITS) {
+        input2.setSelectionRange(0, 0);
+        input2.focus();
+      }
+    } else if (event.target === input2) {
+      if (event.keyCode === 8 && input2.selectionStart === 0) {
+        input1.setSelectionRange(SYMBOL_DIGITS, SYMBOL_DIGITS);
+        input1.focus();
+      } else if (event.keyCode === 37 && input2.selectionStart === 0) {
+        input1.setSelectionRange(SYMBOL_DIGITS, SYMBOL_DIGITS);
+        input1.focus();
+      }
+    }
+  }
+  function onChange (event) {
+    const value = input1.value + input2.value;
+    self.props.onChange(self.props.index, value);
+  }
+  self.state = {selectionStart: 0, selectionEnd: 0};
   self.render = function() {
     const {index, value} = self.props;
+    const value1 = value.substr(0, SYMBOL_DIGITS);
+    const value2 = value.substr(SYMBOL_DIGITS, SYMBOL_DIGITS);
     return (
       <div className="highlightBigramSymbolDiv">
-        <input type="text" maxLength={2 * SYMBOL_DIGITS} value={value} onChange={onChange} />
+        <input type="text" ref={refInput1} onKeyDown={onKeyDown} onKeyPress={onKeyPress} maxLength={SYMBOL_DIGITS} value={value1} onChange={onChange} />
+        <input type="text" ref={refInput2} onKeyDown={onKeyDown} maxLength={SYMBOL_DIGITS} value={value2} onChange={onChange} />
       </div>
     );
   };

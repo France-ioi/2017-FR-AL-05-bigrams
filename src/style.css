@@ -228,9 +228,22 @@ button + button {
     width: 50px;
     display: inline-block;
     text-align: center;
+    margin-bottom: 3px;
+    margin-right: 4px;
+    border: 1px solid #aaa;
+    line-height: 24px;
+}
+.highlightBigramSymbolDiv {
+    margin-bottom: 3px;
+}
+.highlightBigramSymbolDiv input, .highlightBigramLetterDiv input {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    text-align: center;
 }
 .highlightBigramSymbolDiv input {
-    width: 40px;
+    width: 22px;
 }
 .highlightBigramLetterDiv input {
     width: 30px;
@@ -245,9 +258,6 @@ button + button {
 .bigramsHighlightSearch .toolLabel {
     display: inline-block;
     width: 12em;
-}
-.highlightBigramSymbolDiv {
-    margin-bottom: 3px;
 }
 
 /*
