@@ -265,9 +265,20 @@ button + button {
     Tool Analysis
 
 */
+.analysisChoiceContainer {
+    height: 25px;
+}
+.analysisChoiceContainer label {
+    margin-left: 10px;
+}
+.analysisChoiceContainer input[type=checkbox] {
+    margin-right: 5px;
+    vertical-align: top;
+}
 .analysisBox {
     height: 300px;
     overflow-y: scroll;
+    clear: both;
 }
 .analysisBox td {
     padding: 5px 0;

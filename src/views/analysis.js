@@ -79,12 +79,12 @@ export const Analysis = EpicComponent(self => {
               <option value="symbols">{"Symboles"}</option>
               <option value="bigrams">{"Bigrammes"}</option>
             </select>
+            {selectedMode === 'bigrams' &&
+              <label>
+                <input type="checkbox" value={repeatedBigrams} onChange={onChangeRepeatedBigramsFilter}/>
+                {"afficher uniquement les bigrammes répétés"}
+              </label>}
           </div>
-          {selectedMode === 'bigrams' &&
-            <label>
-              <input type="checkbox" value={repeatedBigrams} onChange={onChangeRepeatedBigramsFilter}/>
-              {"afficher uniquement les bigrammes répétés"}
-            </label>}
           <div className="analysisBox">
             <table>
               <tbody>
