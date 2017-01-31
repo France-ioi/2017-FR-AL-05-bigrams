@@ -130,3 +130,7 @@ export function analyze(cipherText) {
     repeatedBigrams: analyzeAuxiliary(cipherText, true, true)
   };
 };
+
+export function extractClearText (combinedText) {
+  return combinedText.map(c => c.letter || '_').join('');
+};

@@ -9,26 +9,24 @@ alkindiTaskServer({
 });
 
 function gradeAnswer (full_task, task, answer, callback) {
-  // TODO grading.
-  callback(null, {
-    feedback: false, score: 0, is_solution: false, is_full_solution: false
-  });
-  return;
-  const {secretKey} = full_task;
-  const {key} = answer;
-  let nCorrect = 0;
-  secretKey.forEach(function (value, index) {
-    if (value === key[index]) {
-      nCorrect += 1;
+  const {clearText} = full_task;
+  const sumbittedText = answer.clearText;
+  const wrongMap = new Map();
+  for (let iChar = 0; iChar < clearText.length; iChar += 1) {
+    const correctCode = clearText.charCodeAt(iChar);
+    const submittedCode = sumbittedText.charCodeAt(iChar);
+    if (correctCode !== submittedCode && !wrongMap.has(correctCode)) {
+      wrongMap.set(correctCode, submittedCode);
     }
-  });
-  const is_full_solution = nCorrect === secretKey.length;
-  const is_solution = is_full_solution;  // could be nCorrect > 0
-  const feedback = is_full_solution;
+  }
+  const nErrors = wrongMap.size;
+  const is_full_solution = nErrors === 0;
+  const is_solution = nErrors <= 4;
+  const feedback = is_solution ? nErrors : false;
   const highestPossibleScore = getHighestPossibleScore(task);
-  const score = is_full_solution ? highestPossibleScore : 0;
+  const score = is_solution ? highestPossibleScore * (1 - 0.25 * nErrors) : 0;
   callback(null, {
-    feedback, score, is_solution, is_full_solution
+    success: true, feedback, score, is_solution, is_full_solution
   });
 }
 

@@ -3,6 +3,8 @@ import React from 'react';
 import {Alert, Button} from 'react-bootstrap';
 import classnames from 'classnames';
 import EpicComponent from 'epic-component';
+
+import {extractClearText} from './utils';
 import {CipherTextView} from './views/cipherText';
 import {SubstitutionEdit} from './views/substitutionEdit';
 import {HighlightAndSearch} from './views/highlight';
@@ -85,15 +87,22 @@ export const Workspace = actions => EpicComponent(self => {
         <div className="taskHeader">
           <div className="submitBlock">
             <Button onClick={onSubmitAnswer} disabled={submitAnswer && submitAnswer.status === 'pending'}>
-              {"soumettre la clé"}
+              {"soumettre"}
             </Button>
           </div>
           {submitAnswer.feedback !== undefined &&
             <div className="feedbackBlock" onClick={onDismissAnswerFeedback}>
-              {submitAnswer.feedback === true &&
+              {submitAnswer.feedback === 0 &&
                 <span>
                   <i className="fa fa-check" style={{color: 'green'}}/>
-                  {" Votre réponse est correcte."}
+                  {" Votre réponse est exacte."}
+                </span>}
+              {submitAnswer.feedback > 0 &&
+                <span>
+                  <i className="fa fa-check" style={{color: 'orange'}}/>
+                  {" Votre réponse a "}{submitAnswer.feedback}
+                  {" erreur"}{submitAnswer.feedback === 1 ? '' : 's'}
+                  {"."}
                 </span>}
               {submitAnswer.feedback === false &&
                 <span>
@@ -109,7 +118,7 @@ export const Workspace = actions => EpicComponent(self => {
         {submitAnswer.status === 'rejected' && (
           submitAnswer.error === 'too soon'
             ? <Alert bsStyle='warning'>{"Trop de réponses en une minute."}</Alert>
-            : <Alert bsStyle='error'>{"Votre réponse n'a pas pu être prise en compte."}</Alert>)}
+            : <Alert bsStyle='danger'>{"Votre réponse n'a pas pu être prise en compte."}</Alert>)}
         <div className="taskInstructions">
         </div>
         <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution}
@@ -145,7 +154,8 @@ export const Workspace = actions => EpicComponent(self => {
   /********************* From reused key. ***********************/
 
   const onSubmitAnswer = function () {
-    const answer = {substitution: self.props.workspace.substitution};
+    const clearText = extractClearText(self.props.workspace.combinedText);
+    const answer = {clearText};
     self.props.dispatch({type: actions.submitAnswer, answer});
   };
 
