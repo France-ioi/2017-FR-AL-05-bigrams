@@ -115,7 +115,7 @@ export const HighlightAndSearch = EpicComponent(self => {
     self.props.onChangeSymbolHighlight(index, highlight);
   };
   self.render = function() {
-    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked} = self.props;
+    const {filters, substitution, symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, onBigramSymbolChange, onBigramLetterChange, onClickSearch, selectedColorIndex, onColorPicked, onClearAll} = self.props;
     return (
       <div className="panel panel-default highlightView">
         <div className="panel-heading toolHeader">
@@ -127,7 +127,7 @@ export const HighlightAndSearch = EpicComponent(self => {
             <div className="higlightPalette">
               {COLOR_PALETTE.map((hue, index) =>
                 <ColorPickerItem key={index} index={index} hue={hue} selected={selectedColorIndex == index} onClick={onColorPicked} />)}
-              <Button>Tout déselectionner</Button>
+              <Button onClick={onClearAll}>Tout déselectionner</Button>
             </div>
             <div className="toolBox">
               <div className="highlightToggleBox">

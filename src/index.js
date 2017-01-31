@@ -44,7 +44,8 @@ function TaskBundle (bundle, deps) {
   /* The 'Workspace' view displays the main task view to the contestant. */
   const WorkspaceActions = bundle.pack(
     'showHintRequest', 'requestHint', 'submitAnswer', 'SaveButton', 'dismissAnswerFeedback',
-    'changeSubstitution', 'lockSymbol', 'changeSymbolHighlight', 'changeBigramHighlightSymbols', 'changeBigramHighlightLetters',
+    'changeSubstitution', 'lockSymbol', 'changeSymbolHighlight', 'changeBigramHighlightSymbols',
+    'changeBigramHighlightLetters', 'clearAllHighlight',
     'onSearch', 'filterChanged', 'analysisModeChanged', 'repeatedBigramsFilterChanged',
     'setTextBoxInterface', 'colorPicked');
   function WorkspaceSelector (state, props) {
@@ -126,6 +127,19 @@ function TaskBundle (bundle, deps) {
       }
     });
     return updateWorkspace(state, dump);
+  });
+
+  bundle.defineAction('clearAllHighlight', 'Workspace.ClearAllHighlight');
+  bundle.addReducer('clearAllHighlight', function (state, _action) {
+    const {dump} = state;
+    const symbolAttrs = {...dump.symbolAttrs};
+    Object.keys(symbolAttrs).forEach(function (symbol) {
+      const attrs = symbolAttrs[symbol];
+      if (typeof attrs.highlight === 'number') {
+        symbolAttrs[symbol] = {...attrs, highlight: false};
+      }
+    });
+    return updateWorkspace(state, {...dump, symbolAttrs});
   });
 
   /* search {forward, bigrams} finds the next or previous match. */

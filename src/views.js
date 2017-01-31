@@ -46,6 +46,10 @@ export const Workspace = actions => EpicComponent(self => {
     self.props.dispatch({type: actions.changeBigramHighlightLetters, index, value});
   };
 
+  const onClearAllHighlight = function () {
+    self.props.dispatch({type: actions.clearAllHighlight});
+  };
+
   const onClickSearch = function(forward, bigrams) {
     self.props.dispatch({type: actions.onSearch, forward, bigrams});
   };
@@ -128,6 +132,7 @@ export const Workspace = actions => EpicComponent(self => {
           onClickSearch={onClickSearch}
           onChangeFilter={onChangeFilter}
           onChangeMode={onChangeAnalysisMode}
+          onClearAll={onClearAllHighlight}
         />
         <Analysis substitution={substitution} analysis={analysis}
           selectedMode={analysisMode}
