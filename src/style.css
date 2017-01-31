@@ -251,6 +251,10 @@ button + button {
 .searchDiv {
     display: inline-block;
 }
+.applyFiltersDiv input[type=checkbox] {
+    margin-right: 5px;
+    vertical-align: top;
+}
 .isSearched {
     border: 2px solid red;
     margin: -1px 1px 9px -1px;
