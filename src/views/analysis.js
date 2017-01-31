@@ -89,7 +89,6 @@ export const Analysis = EpicComponent(self => {
             <table>
               <tbody>
                 <tr>
-                  <td></td>
                   <td>
                     Nombres qui suivent le plus fréquemment :
                   </td>
@@ -102,12 +101,6 @@ export const Analysis = EpicComponent(self => {
                   const displayLetters = symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray);
                   return (
                     <tr key={index}>
-                      <td className="analysisBox-labels">
-                        <div className="charPair-labels">
-                          <div className="charPair-label-symb">{"Chiffré"}</div>
-                          <div className="charPair-label-letter">{"Clair"}</div>
-                        </div>
-                      </td>
                       <td className="analysisBox-before">
                         <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
                       </td>
