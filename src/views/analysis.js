@@ -86,35 +86,24 @@ export const Analysis = EpicComponent(self => {
               </label>}
           </div>
           <div className="analysisBox">
-            <table>
-              <tbody>
-                <tr>
-                  <td>
-                    Nombres qui suivent le plus fréquemment :
-                  </td>
-                  <td></td>
-                  <td>
-                    Nombres qui précèdent le plus fréquemment :
-                  </td>
-                </tr>
-                {analysis.map(function(symbolAnalysis, index) {
-                  const displayLetters = symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray);
-                  return (
-                    <tr key={index}>
-                      <td className="analysisBox-before">
-                        <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
-                      </td>
-                      <td className="analysisBox-center">
-                        <AnalysisTriplet symbols={symbolAnalysis.symbolString} letters={displayLetters} count={symbolAnalysis.count} />
-                      </td>
-                      <td className="analysisBox-after">
-                        <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />
-                      </td>
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
+            <div className="analysisBox-label">Nombres qui précèdent le plus fréquemment :</div>
+            <div className="analysisBox-label">Nombres qui suivent le plus fréquemment :</div>
+              {analysis.map(function(symbolAnalysis, index) {
+                const displayLetters = symbolsToDisplayLetters(substitution, symbolAnalysis.symbolArray);
+                return (
+                  <div key={index} className="analysisBox-row">
+                    <div className="analysisBox-before">
+                      <AnalysisBox array={symbolAnalysis.before} substitution={substitution} />
+                    </div>
+                    <div className="analysisBox-center">
+                      <AnalysisTriplet symbols={symbolAnalysis.symbolString} letters={displayLetters} count={symbolAnalysis.count} />
+                    </div>
+                    <div className="analysisBox-after">
+                      <AnalysisBox array={symbolAnalysis.after} substitution={substitution} />
+                    </div>
+                  </div>
+                );
+              })}
           </div>
         </div>
       </div>
