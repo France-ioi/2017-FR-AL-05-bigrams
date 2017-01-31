@@ -101,7 +101,14 @@ button + button {
 .cipherTextView .cipherTextLetter {
     cursor: default;
 }
-
+.cipherTextBox .charPair.isLocked::after {
+    content: "\F13E";
+    font-family: FontAwesome;
+    font-size: 9px;
+    position:  absolute;
+    bottom: -2px;
+    right: 1px;
+}
 /*
 
     Tool Substitution and Hints
@@ -302,12 +309,4 @@ button + button {
 }
 .charPair.isHint {
     background-color: #ccc;
-}
-.charPair.isLocked::after {
-    content: "\F13E";
-    font-family: FontAwesome;
-    font-size: 9px;
-    position:  absolute;
-    bottom: -2px;
-    right: 1px;
 }
