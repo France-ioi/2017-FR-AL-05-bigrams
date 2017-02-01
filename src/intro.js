@@ -145,18 +145,18 @@ const Task1 = EpicComponent(self => {
         <h2>Analyse</h2>
 
         <p>Deux modes sont disponibles via la liste déroulante : simple et double.</p>
-        <p>Dans le mode simple, l'outil sélectionne les 20 nombres les plus fréquents du texte, et les représente au milieu, du plus fréquent au moins fréquent, avec le nombre d'occurrences indiqué en dessous.</p>
+        <p>Dans le mode simple, l'outil représente au milieu tous les nombres du texte, du plus fréquent au moins fréquent, avec le nombre d'occurrences indiqué en dessous.</p>
 
         <img src={asset("images/analysisToolSymbols.png")} alt="analyse : symboles" />
 
         <p>À la gauche de chaque nombre, on indique quels nombres apparaissent le plus fréquemment juste avant lui. À sa droite, ceux qui apparaissent le plus fréquemment juste après.</p>
-        <p>Ainsi dans l’exemple ci-dessous, le nombre 30 est le plus fréquent dans le texte, où il apparaît 74 fois. Le nombre le plus fréquent à sa gauche est 26, la paire 2630 apparaissant 7 fois dans le texte. De même, le nombre le plus fréquemment à sa droite est 16, et la paire 3016 apparaît 10 fois dans le texte.</p>
+        <p>Ainsi dans l’exemple ci-dessous, le nombre 29 est le plus fréquent dans le texte, où il apparaît 522 fois. Le nombre le plus fréquent à sa gauche est 15, la paire 1529 apparaissant 55 fois dans le texte. De même, le nombre le plus fréquemment à sa droite est 16, et la paire 2916 apparaît 65 fois dans le texte.</p>
         <p>Si la case d’activation du filtrage a été activée dans la partie du haut de l’outil de recherche, seuls les nombres sélectionnés dans cet outil sont considérés. Le filtrage ne s’applique qu’au nombre principal au milieu, les tableaux des deux côtés restent affichés entièrement.</p>
-        <p>Dans le mode double, l’outil sélectionne les 20 paires de nombres (bigrammes) les plus fréquents dans le texte, par ordre décroissant de cette fréquence. Là aussi on représente les symboles qui apparaissent le plus fréquemment juste avant et juste après chaque paire.</p>
+        <p>Dans le mode double, l’outil sélectionne toutes les paires de nombres (bigrammes) du texte, par ordre décroissant de cette fréquence. Là aussi on représente les symboles qui apparaissent le plus fréquemment juste avant et juste après chaque paire.</p>
 
         <img src={asset("images/analysisToolSymbolsPairs.png")} alt="analyse : paires de symboles" />
 
-        <p>Dans cet exemple, la paire de nombres la plus fréquente est 2141, et le nombre qui la précède le plus souvent est 17, tandis que celui qui la suit le plus souvent est 05.</p>
+        <p>Dans cet exemple, la paire de nombres la plus fréquente est 0702, et le nombre qui la précède le plus souvent est 21, tandis que celui qui la suit le plus souvent est 15.</p>
         <p>Si le filtrage a été activé dans la partie du bas de l’outil de recherche, seuls les bigrammes indiqués dans cet outils sont représentés.</p>
         <p>Enfin, si l’on coche la case à cocher “afficher uniquement les bigrammes répétés”, seules les paires dont les 2 nombres sont identiques sont affichées.</p>
 
