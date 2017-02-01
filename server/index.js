@@ -49,6 +49,6 @@ function grantHint (full_task, task, query, callback) {
 
 function getHighestPossibleScore (task) {
   const {version, hints, baseScore, hintCost} = task;
-  const nHints = hints.filter(x => x != null).length;
+  const nHints = hints.filter(x => x !== null).length;
   return Math.max(0, baseScore - nHints * hintCost);
 }
