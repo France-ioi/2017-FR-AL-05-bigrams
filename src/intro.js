@@ -5,6 +5,7 @@ import url from 'url';
 const Task1 = EpicComponent(self => {
 
   self.render = function () {
+    const hintCost = 20; // XXX get from task
     function asset (path) {
       return url.resolve(self.props.baseUrl, path);
     }
@@ -97,11 +98,11 @@ const Task1 = EpicComponent(self => {
           </tbody>
         </table>
         <p>Dans un texte chiffré ainsi, une analyse de fréquence n'aidera pas à trouver quels nombres représentent un ‘E’, car chacun des deux nombres 11 et 06 est deux fois moins fréquent que dans le message d'origine.</p>
-        <p>Selon ce principe, on peut affecter autant de nombres différents qu'on le souhaite à chaque lettre. On affecte plus de nombre différents aux lettres les plus fréquentes en français (E, A, I, S, N, ...) qu'aux lettres les moins fréquentes. C'est ce qui est fait dans ce sujet.</p>
+        <p>Selon ce principe, on peut affecter autant de nombres différents qu'on le souhaite à chaque lettre. On affecte plus de nombres différents aux lettres les plus fréquentes en français (E, A, S, I, ...) qu'aux lettres les moins fréquentes. C'est ce qui est fait dans ce sujet.</p>
 
         <h2>Substitution utilisée</h2>
 
-        <p>Dans cette version du sujet, on utilise les nombres de 00 à 29 dans la substitution. À chaque lettre se substitue donc un nombre, et les 5 nombres restants sont attribués aux lettres les plus fréquentes.</p>
+        <p>Dans cette version du sujet, on utilise les nombres de 00 à 29 dans la substitution. À chaque lettre se substitue donc un nombre, et les 4 nombres restants sont attribués aux lettres les plus fréquentes.</p>
         <p>Il est toujours possible de décrypter ces messages, à vous de trouver comment, en vous aidant des outils que nous vous proposons.</p>
 
         <h2>Substitution et indices</h2>
@@ -120,7 +121,7 @@ const Task1 = EpicComponent(self => {
         <p>Lorsque vous êtes convaincu qu'il s'agit de la bonne lettre, vous pouvez cliquer sur le cadenas pour la bloquer et éviter de la modifier par erreur. Ceci a pour effet d’assombrir toutes les occurrences du nombre et de la lettre.</p>
 
         <h3>2) Obtenir des indices :</h3>
-        <p>Si vous cliquez simplement sur un nombre, vous pouvez demander en indice, la lettre correspondant à ce nombre, pour un coût de XX points.</p>
+        <p>Si vous cliquez simplement sur un nombre, vous pouvez demander en indice, la lettre correspondant à ce nombre, pour un coût de {hintCost} points.</p>
 
         <img src={asset("images/hints.png")} alt="substitution : obtenir des indices" />
 
