@@ -30,13 +30,10 @@ const AnalysisSymbolTriplet = EpicComponent(self => {
     const {letter, isHint, highlight} = substitution[symbol];
     const symbolStr = symbolToDisplayString(symbol);
     const letterStr = letterToDisplayString(letter);
-    const classes = [
-      "analysisCharPair", "charPair", isHint && "isHint"
-    ];
     const color = getBackgroundColor(highlight, isHint, false);
     return (
       <div className="analysisTriplet" style={{backgroundColor: color}}>
-        <div className={classnames(classes)}>
+        <div className="analysisCharPair charPair">
           <div className="pairTop">{symbolStr}</div>
           <div className="pairBottom">{letterStr}</div>
         </div>
