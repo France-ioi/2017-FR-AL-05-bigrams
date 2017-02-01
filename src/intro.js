@@ -11,7 +11,7 @@ const Task1 = EpicComponent(self => {
     }
     return (
       <div className="taskInstructions">
-        <h1>Substitution polyalphabétique 1</h1>
+        <h1>Substitution aplatie 1</h1>
 
         <h2>Méthode de chiffrement</h2>
 
@@ -173,7 +173,7 @@ const Task2 = EpicComponent(self => {
   self.render = function () {
     return (
       <div className="taskInstructions">
-        <h1>Substitution polyalphabétique 2</h1>
+        <h1>Substitution aplatie 2</h1>
 
         <p>Ce sujet est identique au précédent, sauf pour le choix de la substitution : ce sont cette fois ci 45 nombres différents qui sont utilisés, et répartis entre les lettres de l’alphabet pour équilibrer autant que possible les fréquences des nombres.</p>
 
