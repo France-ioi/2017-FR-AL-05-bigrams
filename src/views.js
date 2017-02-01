@@ -64,7 +64,7 @@ export const Workspace = actions => EpicComponent(self => {
 
   self.render = function () {
     const {task, dump, workspace, score, hintRequest, submitAnswer, selectedColorIndex} = self.props;
-    const {cipherText, hints} = task;
+    const {cipherText, hints, baseScore, hintCost} = task;
     const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode, repeatedBigrams} = dump;
     const {numSymbols, combinedText, substitution, analysis} = workspace;
     return (
@@ -110,6 +110,7 @@ export const Workspace = actions => EpicComponent(self => {
         <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution}
           onChange={onSubstitutionChange} onLockSymbol={onLockSymbol}
           onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest}
+          baseScore={baseScore} hintCost={hintCost}
           onRequestHint={onRequestHint} hintRequest={hintRequest} hints={hints} />
         <CipherTextView
           combinedText={combinedText} searchCursor={searchCursor}

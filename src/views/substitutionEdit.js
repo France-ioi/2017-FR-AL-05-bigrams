@@ -60,6 +60,7 @@ const SubstitutionEditHint = EpicComponent(self => {
 export const SubstitutionEdit = EpicComponent(self => {
 
   function renderHintRequest () {
+    const {baseScore, hintCost} = self.props;
     const allowHints = true;
     if (!allowHints) {
       <div className="hintsDialog">
@@ -69,10 +70,9 @@ export const SubstitutionEdit = EpicComponent(self => {
         </p>
       </div>
     }
-    const maximumScore = 150; // XXX get from task
-    const hintCost = 20;
     const {hints, hintRequest, onRequestHint, onCloseHintRequest} = self.props;
-    const highestPossibleScore = Math.max(0, maximumScore - Object.keys(hints).length * hintCost);
+    const hintsGranted = hints.filter(x => x !== null).length;
+    const highestPossibleScore = Math.max(0, baseScore - hintsGranted * hintCost);
     const position = `0${hintRequest.index}`.slice(-2);
     return (
       <div className="hintsDialog">
