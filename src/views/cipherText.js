@@ -37,7 +37,7 @@ export const CipherTextView = EpicComponent(self => {
 
   self.state = {
     firstVisibleLine: 0,
-    symbolsPerLine: 23,
+    symbolsPerLine: 22,
     lineHeight: 64,
     visibleLines: 6
   };
