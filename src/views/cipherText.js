@@ -59,11 +59,6 @@ export const CipherTextView = EpicComponent(self => {
     self.setState({firstVisibleLine});
   }
 
-  /*
-    - line height : 54 px
-    - boxes per line : 23
-    - 5 lines displayed
-  */
   self.render = function() {
     const {combinedText, searchCursor} = self.props;
     const {scrolling, firstVisibleLine, symbolsPerLine, lineHeight, visibleLines} = self.state;
