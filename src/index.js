@@ -34,12 +34,6 @@ function TaskBundle (bundle, deps) {
     return {...state, workspaceOperations, selectedColorIndex: 0};
   });
 
-  /* The 'Task' view displays the task introduction to the contestant. */
-  bundle.defineView('Task', TaskSelector, Task);
-  function TaskSelector (state) {
-    const {task, taskBaseUrl} = state;
-    return {version: task.version, baseUrl: taskBaseUrl};
-  }
 
   /* The 'Workspace' view displays the main task view to the contestant. */
   const WorkspaceActions = bundle.pack(

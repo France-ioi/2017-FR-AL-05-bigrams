@@ -1,9 +1,9 @@
 import React from 'react';
+import {connect} from 'react-redux';
 import EpicComponent from 'epic-component';
 import url from 'url';
 
 const Task1 = EpicComponent(self => {
-
   self.render = function () {
     const hintCost = 20; // XXX get from task
     function asset (path) {
@@ -182,7 +182,7 @@ const Task2 = EpicComponent(self => {
   }
 });
 
-export default EpicComponent(self => {
+export const Task = EpicComponent(self => {
   self.render = function () {
     const {version, baseUrl} = self.props;
     switch (version) {
@@ -192,3 +192,14 @@ export default EpicComponent(self => {
     }
   };
 });
+
+function TaskSelector (state) {
+  const {task, taskBaseUrl} = state;
+  return {version: task.version, baseUrl: taskBaseUrl};
+}
+
+export default {
+  views: {
+     Task: connect(TaskSelector)(Task)
+  },
+};
