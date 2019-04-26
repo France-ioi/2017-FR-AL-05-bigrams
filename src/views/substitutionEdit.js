@@ -1,66 +1,68 @@
 
-import React from '../../node_modules/react/react';
-import {Alert, Button} from '../../node_modules/react-bootstrap/lib';
-import classnames from '../../node_modules/classnames';
-import EpicComponent from '../../node_modules/epic-component/lib';
-import {letterToDisplayString, symbolToDisplayString} from '../utils';
+import React from 'react';
+import {Button} from 'react-bootstrap';
+import classnames from 'classnames';
+import {symbolToDisplayString} from '../utils';
 
-const SubstitutionEditCharPair = EpicComponent(self => {
-  const onLetterChange = function (event) {
-    const {index} = self.props;
+class SubstitutionEditCharPair extends React.PureComponent {
+  onLetterChange = (event) => {
+    const {index} = this.props;
     const value = event.target.value.trim().toUpperCase();
-    self.props.onChange(index, value);
-  };
-  const onFocus = function (event) {
+    this.props.onChange(index, value);
+  }
+
+  onFocus = (event) => {
     event.target.select();
-  };
-  const onSymbolClick = function () {
-    self.props.onShowHintRequest(self.props.index);
-  };
-  const onLockClick = function () {
-    if (self.props.letter) {
-      self.props.onLockSymbol(self.props.index, !self.props.isLocked);
+  }
+
+  onSymbolClick = () => {
+    this.props.onShowHintRequest(this.props.index);
+  }
+
+  onLockClick = () => {
+    if (this.props.letter) {
+      this.props.onLockSymbol(this.props.index, !this.props.isLocked);
     }
-  };
-  self.render = function () {
-    const {symbol, letter, isLocked} = self.props;
+  }
+
+  render () {
+    const {symbol, letter, isLocked} = this.props;
     const classes = ['substitutionEditCharPair', 'charPair', isLocked && 'isLocked']
     return (
       <div className={classnames(classes)}>
-        <div className="substitutionEditSymbol pairTop clickable" onClick={onSymbolClick}>
+        <div className="substitutionEditSymbol pairTop clickable" onClick={this.onSymbolClick}>
           {symbol}
         </div>
         <div className="substitutionEditLetter pairBottom">
           {isLocked
             ? <input value={letter} className="substitutionLetterInput" readOnly />
-            : <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={onLetterChange} onFocus={onFocus} onClick={onFocus} />}
-          <i onClick={onLockClick} className={classnames(['fa', isLocked ? 'fa-lock' : 'fa-unlock-alt', !letter && 'lockDisabled'])}></i>
+            : <input value={letter} maxLength="1" className="substitutionLetterInput" onChange={this.onLetterChange} onFocus={this.onFocus} onClick={this.onFocus} />}
+          <i onClick={this.onLockClick} className={classnames(['fa', isLocked ? 'fa-lock' : 'fa-unlock-alt', !letter && 'lockDisabled'])}></i>
         </div>
       </div>
     );
-  };
-});
+  }
+}
 
-const SubstitutionEditHint = EpicComponent(self => {
-  self.render = function () {
-    const {symbol, letter} = self.props;
-    return (
-      <div className="substitutionEditCharPair charPair isHint">
-        <div className="substitutionEditSymbol pairTop">
-          {symbol}
-        </div>
-        <div className="substitutionEditLetter pairBottom">
-          <input value={letter} className="substitutionLetterInput" readOnly />
-        </div>
+function SubstitutionEditHint ({symbol, letter}) {
+  return (
+    <div className="substitutionEditCharPair charPair isHint">
+      <div className="substitutionEditSymbol pairTop">
+        {symbol}
       </div>
-    );
-  };
-});
+      <div className="substitutionEditLetter pairBottom">
+        <input value={letter} className="substitutionLetterInput" readOnly />
+      </div>
+    </div>
+  );
+}
 
-export const SubstitutionEdit = EpicComponent(self => {
 
-  function renderHintRequest () {
-    const {baseScore, hintCost} = self.props;
+export class SubstitutionEdit extends React.PureComponent {
+
+  renderHintRequest = () => {
+    const {baseScore, hintCost} = this.props;
+    const {hints, hintRequestData, onRequestHint, onCloseHintRequest} = this.props;
     const allowHints = true;
     if (!allowHints) {
       <div className="hintsDialog">
@@ -70,7 +72,6 @@ export const SubstitutionEdit = EpicComponent(self => {
         </p>
       </div>
     }
-    const {hints, hintRequestData, onRequestHint, onCloseHintRequest} = self.props;
     const hintsGranted = hints.filter(x => x !== null).length;
     const highestPossibleScore = Math.max(0, baseScore - hintsGranted * hintCost);
     const position = `0${hintRequestData.index}`.slice(-2);
@@ -87,15 +88,15 @@ export const SubstitutionEdit = EpicComponent(self => {
     );
   }
 
-  self.render = function () {
-    const {symbolAttrs, substitution, onChange, onLockSymbol, onShowHintRequest, hints, hintRequestData} = self.props;
+  render () {
+    const {symbolAttrs, substitution, onChange, onLockSymbol, onShowHintRequest, hints, hintRequestData} = this.props;
     return (
       <div className="panel panel-default substitutionView">
         <div className="panel-heading toolHeader">
           substitution et indices
         </div>
         <div className="panel-body">
-          {hintRequestData && renderHintRequest()}
+          {hintRequestData && this.renderHintRequest()}
           <p className="toolDescription">
             Cliquez sous un nombre pour éditer la lettre qui correspond, ou sur le nombre pour l'obtenir en indice.
           </p>
@@ -113,5 +114,5 @@ export const SubstitutionEdit = EpicComponent(self => {
         </div>
       </div>
     );
-  };
-});
+  }
+}

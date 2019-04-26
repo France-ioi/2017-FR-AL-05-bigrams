@@ -1,118 +1,113 @@
 
-import React from '../node_modules/react/react';
-import {Alert, Button} from '../node_modules/react-bootstrap/lib';
-import classnames from '../node_modules/classnames';
-import EpicComponent from '../node_modules/epic-component/lib';
-
-import {extractClearText} from './utils';
+import React from 'react';
 import {CipherTextView} from './views/cipherText';
 import {SubstitutionEdit} from './views/substitutionEdit';
 import {HighlightAndSearch} from './views/highlight';
 import {Analysis} from './views/analysis';
 
-export default EpicComponent(self => {
 
-  const onSubstitutionChange = function (index, letter) {
-    self.props.dispatch({type: self.props.actions.changeSubstitution, index, letter});
-  };
+export default class Views extends React.PureComponent {
 
-  const onLockSymbol = function (index, value) {
-    self.props.dispatch({type: self.props.actions.lockSymbol, index, value});
-  };
+  onSubstitutionChange = (index, letter) => {
+    this.props.dispatch({type: this.props.actions.changeSubstitution, index, letter});
+  }
 
-  const onChangeSymbolHighlight = function (symbol, highlight) {
-    self.props.dispatch({type: self.props.actions.changeSymbolHighlight, symbol, highlight});
-  };
+  onLockSymbol = (index, value) => {
+    this.props.dispatch({type: this.props.actions.lockSymbol, index, value});
+  }
 
-  const onBigramSymbolChange = function (index, value) {
+  onChangeSymbolHighlight = (symbol, highlight) => {
+    this.props.dispatch({type: this.props.actions.changeSymbolHighlight, symbol, highlight});
+  }
+
+  onBigramSymbolChange = (index, value) => {
     value = value.replace(/[^0-9]+/, '');
-    self.props.dispatch({type: self.props.actions.changeBigramHighlightSymbols, index, value});
-  };
+    this.props.dispatch({type: this.props.actions.changeBigramHighlightSymbols, index, value});
+  }
 
-  const onBigramLetterChange = function (index, value) {
+  onBigramLetterChange = (index, value) => {
     value = value.toUpperCase().replace(/[^A-Z]+/, '');
-    self.props.dispatch({type: self.props.actions.changeBigramHighlightLetters, index, value});
-  };
+    this.props.dispatch({type: this.props.actions.changeBigramHighlightLetters, index, value});
+  }
 
-  const onClearAllHighlight = function () {
-    self.props.dispatch({type: self.props.actions.clearAllHighlight});
-  };
+  onClearAllHighlight = () => {
+    this.props.dispatch({type: this.props.actions.clearAllHighlight});
+  }
 
-  const onClickSearch = function (forward, bigrams) {
-    self.props.dispatch({type: self.props.actions.onSearch, forward, bigrams});
-  };
+  onClickSearch = (forward, bigrams) => {
+    this.props.dispatch({type: this.props.actions.onSearch, forward, bigrams});
+  }
 
-  const onChangeFilter = function (kind, value) {
-    self.props.dispatch({type: self.props.actions.filterChanged, kind, value});
-  };
+  onChangeFilter = (kind, value) => {
+    this.props.dispatch({type: this.props.actions.filterChanged, kind, value});
+  }
 
-  const onChangeAnalysisMode = function (value) {
-    self.props.dispatch({type: self.props.actions.analysisModeChanged, value});
-  };
+  onChangeAnalysisMode = (value) => {
+    this.props.dispatch({type: this.props.actions.analysisModeChanged, value});
+  }
 
-  const onChangeRepeatedBigramsFilter = function (value) {
-    self.props.dispatch({type: self.props.actions.repeatedBigramsFilterChanged, value});
-  };
+  onChangeRepeatedBigramsFilter = (value) => {
+    this.props.dispatch({type: this.props.actions.repeatedBigramsFilterChanged, value});
+  }
 
-  const onColorPicked = function (index) {
-    self.props.dispatch({type: self.props.actions.colorPicked, index});
-  };
+  onColorPicked = (index) => {
+    this.props.dispatch({type: this.props.actions.colorPicked, index});
+  }
 
-  const setTextBoxInterface = function (intf) {
-    self.props.dispatch({type: self.props.actions.setTextBoxInterface, intf});
-  };
+  setTextBoxInterface = (intf) => {
+    this.props.dispatch({type: this.props.actions.setTextBoxInterface, intf});
+  }
 
-  self.render = function () {
-    const {task, dump, workspace, hintRequestData, selectedColorIndex} = self.props;
-    const {cipherText, hints, baseScore, hintCost} = task;
-    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode, repeatedBigrams} = dump;
-    const {numSymbols, combinedText, substitution, analysis} = workspace;
+  render () {
+    const {task, dump, workspace, hintRequestData, selectedColorIndex} = this.props;
+    const {hints, baseScore, hintCost} = task;
+    const {symbolAttrs, highlightedBigramSymbols, highlightedBigramLetters, searchCursor, filters, analysisMode} = dump;
+    const {combinedText, substitution, analysis} = workspace;
     return (
       <div className="taskWrapper">
         {/*<pre>{JSON.stringify(submitAnswer, null, 2)}</pre>*/}
         <SubstitutionEdit symbolAttrs={symbolAttrs} substitution={substitution}
-          onChange={onSubstitutionChange} onLockSymbol={onLockSymbol}
-          onShowHintRequest={onShowHintRequest} onCloseHintRequest={onCloseHintRequest}
+          onChange={this.onSubstitutionChange} onLockSymbol={this.onLockSymbol}
+          onShowHintRequest={this.onShowHintRequest} onCloseHintRequest={this.onCloseHintRequest}
           baseScore={baseScore} hintCost={hintCost}
-          onRequestHint={onRequestHint} hintRequestData={hintRequestData} hints={hints} />
+          onRequestHint={this.onRequestHint} hintRequestData={hintRequestData} hints={hints} />
         <CipherTextView
           combinedText={combinedText} searchCursor={searchCursor}
-          setTextBoxInterface={setTextBoxInterface} />
+          setTextBoxInterface={this.setTextBoxInterface} />
         <HighlightAndSearch
           selectedColorIndex={selectedColorIndex}
           substitution={substitution}
           highlightedBigramSymbols={highlightedBigramSymbols}
           highlightedBigramLetters={highlightedBigramLetters}
           filters={filters}
-          onColorPicked={onColorPicked}
-          onChangeSymbolHighlight={onChangeSymbolHighlight}
-          onBigramSymbolChange={onBigramSymbolChange}
-          onBigramLetterChange={onBigramLetterChange}
-          onClickSearch={onClickSearch}
-          onChangeFilter={onChangeFilter}
-          onChangeMode={onChangeAnalysisMode}
-          onClearAll={onClearAllHighlight}
+          onColorPicked={this.onColorPicked}
+          onChangeSymbolHighlight={this.onChangeSymbolHighlight}
+          onBigramSymbolChange={this.onBigramSymbolChange}
+          onBigramLetterChange={this.onBigramLetterChange}
+          onClickSearch={this.onClickSearch}
+          onChangeFilter={this.onChangeFilter}
+          onChangeMode={this.onChangeAnalysisMode}
+          onClearAll={this.onClearAllHighlight}
         />
         <Analysis substitution={substitution} analysis={analysis}
           selectedMode={analysisMode}
-          onChangeMode={onChangeAnalysisMode}
-          onChangeRepeatedBigramsFilter={onChangeRepeatedBigramsFilter} />
+          onChangeMode={this.onChangeAnalysisMode}
+          onChangeRepeatedBigramsFilter={this.onChangeRepeatedBigramsFilter} />
       </div>
     );
-  };
+  }
 
   /********************* From reused key. ***********************/
 
+  onRequestHint = () => {
+    this.props.dispatch({type: this.props.actions.requestHint, payload: {request: this.props.hintRequestData}});
+  }
 
-  const onRequestHint = function () {
-    self.props.dispatch({type: self.props.actions.requestHint,  payload: {request: self.props.hintRequestData}});
-  };
+  onShowHintRequest = (index) => {
+    this.props.dispatch({type: this.props.actions.showHintRequest, request: {index}});
+  }
 
-  const onShowHintRequest = function (index) {
-    self.props.dispatch({type: self.props.actions.showHintRequest, request: {index}});
-  };
-
-  const onCloseHintRequest = function () {
-    self.props.dispatch({type: self.props.actions.showHintRequest, request: null});
-  };
-});
+  onCloseHintRequest = () => {
+    this.props.dispatch({type: this.props.actions.showHintRequest, request: null});
+  }
+}

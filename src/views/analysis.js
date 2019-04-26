@@ -1,17 +1,15 @@
 
-import React from '../../node_modules/react/react';
-import {Alert, Button} from '../../node_modules/react-bootstrap/lib';
-import classnames from '../../node_modules/classnames';
-import EpicComponent from '../../node_modules/epic-component/lib';
+import React from 'react';
 
 import {
   symbolToDisplayString, letterToDisplayString,
-  symbolsToDisplayLetters} from '../utils';
+  symbolsToDisplayLetters
+} from '../utils';
 import {getBackgroundColor} from '../constants';
 
-const AnalysisTriplet = EpicComponent(self => {
-  self.render = function() {
-    const {symbols, letters, count} = self.props;
+class AnalysisTriplet extends React.PureComponent {
+  render () {
+    const {symbols, letters, count} = this.props;
     return (
       <div className="analysisTriplet">
         <div className="analysisCharPair charPair">
@@ -21,12 +19,11 @@ const AnalysisTriplet = EpicComponent(self => {
         {count}{"x"}
       </div>
     );
-  };
-});
-
-const AnalysisSymbolTriplet = EpicComponent(self => {
-  self.render = function() {
-    const {symbol, substitution, count} = self.props;
+  }
+}
+class AnalysisSymbolTriplet extends React.PureComponent {
+  render () {
+    const {symbol, substitution, count} = this.props;
     const {letter, isHint, highlight} = substitution[symbol];
     const symbolStr = symbolToDisplayString(symbol);
     const letterStr = letterToDisplayString(letter);
@@ -40,25 +37,25 @@ const AnalysisSymbolTriplet = EpicComponent(self => {
         {count}{"x"}
       </div>
     );
-  };
-});
+  }
+}
 
-const AnalysisBox = EpicComponent(self => {
-  self.render = function() {
-    const {array, substitution} = self.props;
+class AnalysisBox extends React.PureComponent {
+  render () {
+    const {array, substitution} = this.props;
     return (
       <div className="analysisSmallBox">
-        {array.map(function(analysisObject, index) {
+        {array.map((analysisObject, index) => {
           return <AnalysisSymbolTriplet key={index} symbol={analysisObject.symbol} count={analysisObject.count} substitution={substitution} />;
         })}
       </div>
     );
-  };
-});
+  }
+}
 
-const SymbolAnalysisRow = EpicComponent(self => {
-  self.render = function() {
-    const {top, substitution, symbolString, symbolArray, count, before, after} = self.props;
+class SymbolAnalysisRow extends React.PureComponent {
+  render () {
+    const {top, substitution, symbolString, symbolArray, count, before, after} = this.props;
     const displayLetters = symbolsToDisplayLetters(substitution, symbolArray);
     return (
       <div className="analysisBox-row" style={{position: 'absolute', top: `${top}px`}}>
@@ -73,39 +70,41 @@ const SymbolAnalysisRow = EpicComponent(self => {
         </div>
       </div>
     );
-  };
-});
+  }
+}
+export class Analysis extends React.PureComponent {
 
-export const Analysis = EpicComponent(self => {
-
-  let scrollBoxElement;
-  const rowHeight = 80;
-  const visibleRowCount = 5;
-
-  function onChangeMode (event) {
-    self.props.onChangeMode(event.target.value);
+  constructor () {
+    super();
+    this.scrollBoxElement = null;
+    this.rowHeight = 80;
+    this.visibleRowCount = 5;
   }
 
-  function onChangeRepeatedBigramsFilter (event) {
-    self.props.onChangeRepeatedBigramsFilter(event.target.checked);
+  onChangeMode = (event) => {
+    this.props.onChangeMode(event.target.value);
   }
 
-  function refScrollBox (element) {
-    scrollBoxElement = element;
+  onChangeRepeatedBigramsFilter = (event) => {
+    this.props.onChangeRepeatedBigramsFilter(event.target.checked);
   }
 
-  function onScroll (event) {
-    const firstVisibleRow = Math.trunc(scrollBoxElement.scrollTop / rowHeight);
-    self.setState({firstVisibleRow});
+  refScrollBox = (element) => {
+    this.scrollBoxElement = element;
   }
 
-  self.state = {firstVisibleRow: 0};
+  onScroll = () => {
+    const firstVisibleRow = Math.trunc(this.scrollBoxElement.scrollTop / this.rowHeight);
+    this.setState({firstVisibleRow});
+  }
 
-  self.render = function() {
-    const {substitution, analysis, selectedMode, repeatedBigrams} = self.props;
-    const {firstVisibleRow} = self.state;
-    const visibleRows = analysis.slice(firstVisibleRow, firstVisibleRow + visibleRowCount);
-    const bottom = analysis.length * rowHeight;
+  state = {firstVisibleRow: 0};
+
+  render () {
+    const {substitution, analysis, selectedMode, repeatedBigrams} = this.props;
+    const {firstVisibleRow} = this.state;
+    const visibleRows = analysis.slice(firstVisibleRow, firstVisibleRow + this.visibleRowCount);
+    const bottom = analysis.length * this.rowHeight;
     return (
       <div className="panel panel-default analysisView">
         <div className="panel-heading toolHeader">
@@ -113,25 +112,25 @@ export const Analysis = EpicComponent(self => {
         </div>
         <div className="panel-body">
           <div className="analysisChoiceContainer">
-            <select onChange={onChangeMode} value={selectedMode}>
+            <select onChange={this.onChangeMode} value={selectedMode}>
               <option value="symbols">{"Simple"}</option>
               <option value="bigrams">{"Double"}</option>
             </select>
             {selectedMode === 'bigrams' &&
               <label>
-                <input type="checkbox" value={repeatedBigrams} onChange={onChangeRepeatedBigramsFilter}/>
+                <input type="checkbox" value={repeatedBigrams} onChange={this.onChangeRepeatedBigramsFilter} />
                 {"afficher uniquement les bigrammes répétés"}
               </label>}
           </div>
           <div className="analysisBox-label">Nombres qui précèdent le plus fréquemment :</div>
           <div className="analysisBox-label">Nombres qui suivent le plus fréquemment :</div>
-          <div className="analysisBox" style={{position: 'relative'}} ref={refScrollBox} onScroll={onScroll}>
+          <div className="analysisBox" style={{position: 'relative'}} ref={this.refScrollBox} onScroll={this.onScroll}>
             {visibleRows.map((content, index) =>
-              <SymbolAnalysisRow key={firstVisibleRow + index} top={(firstVisibleRow + index) * rowHeight} substitution={substitution} {...content} />)}
-            <div style={{position: 'absolute', top: `${bottom}px`, width: '1px', height: '1px'}}/>
+              <SymbolAnalysisRow key={firstVisibleRow + index} top={(firstVisibleRow + index) * this.rowHeight} substitution={substitution} {...content} />)}
+            <div style={{position: 'absolute', top: `${bottom}px`, width: '1px', height: '1px'}} />
           </div>
         </div>
       </div>
     );
-  };
-});
+  }
+}
