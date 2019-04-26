@@ -67,8 +67,7 @@ const difficultCardinalities = {
 const baseScoreByVersion = [0, 200, 150];
 const hintCostByVersion = [0, 20, 10];
 
-function generate (params, seed, callback) {
-  const {version} = params;
+function generate (version, seed) {
   const baseScore = baseScoreByVersion[version];
   const hintCost = hintCostByVersion[version];
   const rng = seedrandom(seed);
@@ -80,9 +79,8 @@ function generate (params, seed, callback) {
   const withSpaces = false; /* not supported by task */
   const clearText = sentences.generate(rng, minLength, maxLength, withSpaces);
   const cipherText = applySubstitution(rng, cipherSubst, clearText);
-  const task = {version, baseScore, hintCost, cipherText, hints: new Array(decipherSubst.length).fill(null)};
-  const full_task = Object.assign({}, task, {clearText, cipherSubst, decipherSubst});
-  callback(null, {task, full_task});
+  const task = {version, baseScore, hintCost, cipherText};
+  return [task, {clearText, cipherSubst, decipherSubst}];
 };
 
 function getClearSymbols (cardinalities) {

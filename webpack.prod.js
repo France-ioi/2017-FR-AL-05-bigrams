@@ -1,7 +1,7 @@
 const path = require('path');
 const webpack = require('webpack');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const SRC = path.resolve(__dirname, "src");
+
 const isDev = process.env.NODE_ENV !== 'production';
 
 const config = module.exports = {
@@ -11,7 +11,7 @@ const config = module.exports = {
   output: {
     path: path.join(__dirname, 'build'),
     filename: 'bundle.js',
-    publicPath: '/',
+    publicPath: 'build/',
     libraryTarget: "var",
     library: "ReactTask"
   },
@@ -32,7 +32,7 @@ const config = module.exports = {
         ]
       },
       {
-        test: /.*\.(eot|ttf|svg|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
+        test: /fonts\/.*\.(eot|ttf|svg|woff(2)?)(\?v=\d+\.\d+\.\d+)?/,
         use: [
           {loader: 'file-loader', options: {name: 'fonts/[name].[ext]'}}
         ]
@@ -53,22 +53,12 @@ const config = module.exports = {
     new webpack.optimize.CommonsChunkPlugin({
       name: "vendor",
       filename: "vendor.js",
-      minChunks: function (module) {return /node_modules/.test(module.resource);}
-    }),
-    new CopyWebpackPlugin([
-      {from: 'bebras-modules/', to: 'bebras-modules/'},
-      {from: `index${!isDev?'.prod':''}.html`, to: 'index.html'}
-    ])
+      minChunks: function (module) { return /node_modules/.test(module.resource); }
+    })
   ],
   externals: { /* TODO: clean this up by not having a dual browser/node module */
     fs: true,
     mime: true
-  },
-  devServer: {
-    contentBase: path.join(__dirname, '/'),
-    compress: true,
-    port: 8080,
-    hot: true,
   }
 };
 

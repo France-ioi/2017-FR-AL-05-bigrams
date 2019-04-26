@@ -1,28 +1,28 @@
 
-import React from 'react';
-import {Alert, Button} from 'react-bootstrap';
-import classnames from 'classnames';
-import EpicComponent from 'epic-component';
+import React from '../../node_modules/react/react';
+import {Alert, Button} from '../../node_modules/react-bootstrap/lib';
+import classnames from '../../node_modules/classnames';
+import EpicComponent from '../../node_modules/epic-component/lib';
 import {letterToDisplayString, symbolToDisplayString} from '../utils';
 
 const SubstitutionEditCharPair = EpicComponent(self => {
-  const onLetterChange = function(event) {
+  const onLetterChange = function (event) {
     const {index} = self.props;
     const value = event.target.value.trim().toUpperCase();
     self.props.onChange(index, value);
   };
-  const onFocus = function(event) {
+  const onFocus = function (event) {
     event.target.select();
   };
-  const onSymbolClick = function() {
+  const onSymbolClick = function () {
     self.props.onShowHintRequest(self.props.index);
   };
-  const onLockClick = function() {
+  const onLockClick = function () {
     if (self.props.letter) {
       self.props.onLockSymbol(self.props.index, !self.props.isLocked);
     }
   };
-  self.render = function() {
+  self.render = function () {
     const {symbol, letter, isLocked} = self.props;
     const classes = ['substitutionEditCharPair', 'charPair', isLocked && 'isLocked']
     return (
@@ -42,7 +42,7 @@ const SubstitutionEditCharPair = EpicComponent(self => {
 });
 
 const SubstitutionEditHint = EpicComponent(self => {
-  self.render = function() {
+  self.render = function () {
     const {symbol, letter} = self.props;
     return (
       <div className="substitutionEditCharPair charPair isHint">
@@ -70,10 +70,10 @@ export const SubstitutionEdit = EpicComponent(self => {
         </p>
       </div>
     }
-    const {hints, hintRequest, onRequestHint, onCloseHintRequest} = self.props;
+    const {hints, hintRequestData, onRequestHint, onCloseHintRequest} = self.props;
     const hintsGranted = hints.filter(x => x !== null).length;
     const highestPossibleScore = Math.max(0, baseScore - hintsGranted * hintCost);
-    const position = `0${hintRequest.index}`.slice(-2);
+    const position = `0${hintRequestData.index}`.slice(-2);
     return (
       <div className="hintsDialog">
         <p><strong>{"Indice demandé : "}</strong>{"Valeur pour la position "}<strong>{position}</strong></p>
@@ -87,20 +87,20 @@ export const SubstitutionEdit = EpicComponent(self => {
     );
   }
 
-  self.render = function() {
-    const {symbolAttrs, substitution, onChange, onLockSymbol, onShowHintRequest, hints, hintRequest} = self.props;
+  self.render = function () {
+    const {symbolAttrs, substitution, onChange, onLockSymbol, onShowHintRequest, hints, hintRequestData} = self.props;
     return (
       <div className="panel panel-default substitutionView">
         <div className="panel-heading toolHeader">
           substitution et indices
         </div>
         <div className="panel-body">
-          {hintRequest && renderHintRequest()}
+          {hintRequestData && renderHintRequest()}
           <p className="toolDescription">
             Cliquez sous un nombre pour éditer la lettre qui correspond, ou sur le nombre pour l'obtenir en indice.
           </p>
           <div className="substitutionBox">
-            {substitution.map(function(subObject, index) {
+            {substitution.map(function (subObject, index) {
               const symbol = symbolToDisplayString(index);
               if (hints[index] !== null) {
                 return <SubstitutionEditHint key={index} letter={hints[index]} symbol={symbol} />;

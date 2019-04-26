@@ -1,8 +1,8 @@
 
-import React from 'react';
-import {Alert, Button} from 'react-bootstrap';
-import classnames from 'classnames';
-import EpicComponent from 'epic-component';
+import React from '../../node_modules/react/react';
+import {Alert, Button} from '../../node_modules/react-bootstrap/lib';
+import classnames from '../../node_modules/classnames';
+import EpicComponent from '../../node_modules/epic-component/lib';
 import {letterToDisplayString, symbolToDisplayString} from '../utils';
 import {NUM_BIGRAMS_SEARCH, SYMBOL_DIGITS, COLOR_PALETTE, getBackgroundColor} from '../constants';
 
