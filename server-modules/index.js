@@ -60,8 +60,6 @@ module.exports.gradeAnswer = function (args, task_data, callback) {
     } = generateTaskData(args.task.random_seed, hintsRequested, version);
 
     const sumbittedText = JSON.parse(args.answer.value).clearText;
-    console.log('sumbittedText :', sumbittedText.substring(0,10));
-    console.log('clearText :', clearText.substring(0,10));
     const wrongMap = new Map();
     for (let iChar = 0; iChar < clearText.length; iChar += 1) {
       const correctCode = clearText.charCodeAt(iChar);

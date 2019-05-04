@@ -1,10 +1,12 @@
 
 import React from 'react';
-
+import {connect} from 'react-redux';
+import update from 'immutability-helper';
 import {
   symbolToDisplayString, letterToDisplayString,
-  symbolsToDisplayLetters
+  symbolsToDisplayLetters, updateWorkspace
 } from '../utils';
+
 import {getBackgroundColor} from '../constants';
 
 class AnalysisTriplet extends React.PureComponent {
@@ -72,21 +74,14 @@ class SymbolAnalysisRow extends React.PureComponent {
     );
   }
 }
-export class Analysis extends React.PureComponent {
+
+class Analysis extends React.PureComponent {
 
   constructor () {
     super();
     this.scrollBoxElement = null;
     this.rowHeight = 80;
     this.visibleRowCount = 5;
-  }
-
-  onChangeMode = (event) => {
-    this.props.onChangeMode(event.target.value);
-  }
-
-  onChangeRepeatedBigramsFilter = (event) => {
-    this.props.onChangeRepeatedBigramsFilter(event.target.checked);
   }
 
   refScrollBox = (element) => {
@@ -96,6 +91,14 @@ export class Analysis extends React.PureComponent {
   onScroll = () => {
     const firstVisibleRow = Math.trunc(this.scrollBoxElement.scrollTop / this.rowHeight);
     this.setState({firstVisibleRow});
+  }
+
+  onChangeAnalysisMode = (event) => {
+    this.props.dispatch({type: this.props.analysisModeChanged, value: event.target.value});
+  }
+
+  onChangeRepeatedBigramsFilter = (event) => {
+    this.props.dispatch({type: this.props.repeatedBigramsFilterChanged, value: event.target.checked});
   }
 
   state = {firstVisibleRow: 0};
@@ -112,7 +115,7 @@ export class Analysis extends React.PureComponent {
         </div>
         <div className="panel-body">
           <div className="analysisChoiceContainer">
-            <select onChange={this.onChangeMode} value={selectedMode}>
+            <select onChange={this.onChangeAnalysisMode} value={selectedMode}>
               <option value="symbols">{"Simple"}</option>
               <option value="bigrams">{"Double"}</option>
             </select>
@@ -134,3 +137,41 @@ export class Analysis extends React.PureComponent {
     );
   }
 }
+
+function AnalysisSelector (state) {
+  const {dump, workspace} = state;
+  const {analysisMode} = dump;
+  const {substitution, analysis} = workspace;
+  const {analysisModeChanged, repeatedBigramsFilterChanged} = state.actions;
+
+  return {
+    substitution, analysis, selectedMode: analysisMode,
+    analysisModeChanged, repeatedBigramsFilterChanged
+  };
+}
+
+function repeatedBigramsFilterChangedReducer (state, action) {
+  const {value} = action;
+  const dump = update(state.dump, {repeatedBigrams: {$set: value}});
+  return updateWorkspace(state, dump);
+}
+
+function analysisModeChangedReducer (state, action) {
+  const {value} = action;
+  const dump = update(state.dump, {analysisMode: {$set: value}});
+  return updateWorkspace(state, dump);
+}
+
+export default {
+  actions: {
+    repeatedBigramsFilterChanged: 'Workspace.RepeatedBigramsFilter.Changed',
+    analysisModeChanged: 'Workspace.AnalysisMode.Changed',
+  },
+  actionReducers: {
+    repeatedBigramsFilterChanged: repeatedBigramsFilterChangedReducer,
+    analysisModeChanged: analysisModeChangedReducer,
+  },
+  views: {
+    Analysis: connect(AnalysisSelector)(Analysis),
+  }
+};

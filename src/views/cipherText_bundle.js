@@ -1,5 +1,6 @@
 
 import React from 'react';
+import {connect} from 'react-redux';
 import classnames from 'classnames';
 import {letterToDisplayString} from '../utils';
 import {getBackgroundColor} from '../constants';
@@ -50,7 +51,7 @@ export class CipherTextView extends React.PureComponent {
       element.scrollTop = Math.max(0, lineNumber * this.state.lineHeight - (element.clientHeight / 2));
     };
     this.textBoxElement = element;
-    this.props.setTextBoxInterface(element && {scrollToPosition});
+    this.setTextBoxInterface(element && {scrollToPosition});
   }
 
   onScroll = () => {
@@ -71,6 +72,10 @@ export class CipherTextView extends React.PureComponent {
       iCell += symbolsPerLine;
     }
     return lines;
+  }
+
+  setTextBoxInterface = (intf) => {
+    this.props.dispatch({type: this.props.setTextBoxInterface, intf});
   }
 
   render () {
@@ -106,3 +111,27 @@ export class CipherTextView extends React.PureComponent {
     );
   }
 }
+
+function CipherTextViewSelector (state) {
+  const {combinedText} = state.workspace;
+  const {searchCursor} = state.dump;
+  const {setTextBoxInterface} = state.actions;
+
+  return {combinedText, searchCursor, setTextBoxInterface};
+}
+
+function setTextBoxInterfaceReducer (state, action) {
+	return {...state, textBoxInterface: action.intf};
+}
+
+export default {
+	actions: {
+		setTextBoxInterface: 'Workspace.TextBox.SetInterface',
+	},
+	actionReducers: {
+		setTextBoxInterface: setTextBoxInterfaceReducer,
+	},
+	views: {
+		CipherTextView: connect(CipherTextViewSelector)(CipherTextView),
+	}
+};

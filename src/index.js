@@ -10,6 +10,11 @@ import './platform.css';
 import 'rc-tooltip/assets/bootstrap.css';
 
 import WorkspaceBundle from './workspace_bundle';
+import AnalysisBundle from './views/analysis_bundle';
+import cipherTextBundle from './views/cipherText_bundle';
+import HighlightSearchBundle from './views/highlight_bundle';
+import SubstitutionBundle from './views/substitution_bundle';
+
 
 const TaskBundle = {
   actionReducers: {
@@ -20,6 +25,10 @@ const TaskBundle = {
     taskStateLoaded: taskStateLoaded,
   },
   includes: [
+    AnalysisBundle,
+    cipherTextBundle,
+    HighlightSearchBundle,
+    SubstitutionBundle,
     WorkspaceBundle,
   ],
   selectors: {

@@ -1,8 +1,10 @@
 
 import React from 'react';
+import {connect} from 'react-redux';
+import update from 'immutability-helper';
 import {Button} from 'react-bootstrap';
 import classnames from 'classnames';
-import {symbolToDisplayString} from '../utils';
+import {symbolToDisplayString, isValidLetter, updateWorkspace} from '../utils';
 
 class SubstitutionEditCharPair extends React.PureComponent {
   onLetterChange = (event) => {
@@ -60,15 +62,17 @@ function SubstitutionEditHint ({symbol, letter}) {
 
 export class SubstitutionEdit extends React.PureComponent {
 
+  state = {hintRequestData: null};
+
   renderHintRequest = () => {
-    const {baseScore, hintCost} = this.props;
-    const {hints, hintRequestData, onRequestHint, onCloseHintRequest} = this.props;
+    const {hints, baseScore, hintCost} = this.props;
+    const {hintRequestData} = this.state;
     const allowHints = true;
     if (!allowHints) {
       <div className="hintsDialog">
         <p><strong>{"Les indices seront bientôt disponibles."}</strong></p>
         <p className="text-center">
-          <Button onClick={onCloseHintRequest}>{"Annuler"}</Button>
+          <Button onClick={this.onCloseHintRequest}>{"Annuler"}</Button>
         </p>
       </div>
     }
@@ -81,15 +85,42 @@ export class SubstitutionEdit extends React.PureComponent {
         <p><strong>{"Coût : "}</strong> {hintCost}</p>
         <p><strong>{"Score disponible : "}</strong>{highestPossibleScore}</p>
         <p className="text-center">
-          <Button onClick={onRequestHint}>{"Valider"}</Button>
-          <Button onClick={onCloseHintRequest}>{"Annuler"}</Button>
+          <Button onClick={this.onRequestHint}>{"Valider"}</Button>
+          <Button onClick={this.onCloseHintRequest}>{"Annuler"}</Button>
         </p>
       </div>
     );
   }
 
+  onRequestHint = () => {
+    this.props.dispatch({type: this.props.requestHint, payload: {request: this.state.hintRequestData}});
+  }
+
+  onShowHintRequest = (index) => {
+    this.setState({hintRequestData: {index}});
+  }
+
+  onCloseHintRequest = () => {
+    this.setState({hintRequestData: null});
+  }
+
+  onSubstitutionChange = (index, letter) => {
+    this.props.dispatch({type: this.props.changeSubstitution, index, letter});
+  }
+
+  onLockSymbol = (index, value) => {
+    this.props.dispatch({type: this.props.lockSymbol, index, value});
+  }
+
+
   render () {
-    const {symbolAttrs, substitution, onChange, onLockSymbol, onShowHintRequest, hints, hintRequestData} = this.props;
+    const {
+      symbolAttrs,
+      substitution,
+      hints
+    } = this.props;
+    const {hintRequestData} = this.state;
+
     return (
       <div className="panel panel-default substitutionView">
         <div className="panel-heading toolHeader">
@@ -101,13 +132,13 @@ export class SubstitutionEdit extends React.PureComponent {
             Cliquez sous un nombre pour éditer la lettre qui correspond, ou sur le nombre pour l'obtenir en indice.
           </p>
           <div className="substitutionBox">
-            {substitution.map(function (subObject, index) {
+            {substitution.map((_subObject, index) => {
               const symbol = symbolToDisplayString(index);
               if (hints[index] !== null) {
                 return <SubstitutionEditHint key={index} letter={hints[index]} symbol={symbol} />;
               } else {
                 const {letter, isLocked} = symbolAttrs[index];
-                return <SubstitutionEditCharPair key={index} index={index} symbol={symbol} letter={letter} isLocked={isLocked} onChange={onChange} onShowHintRequest={onShowHintRequest} onLockSymbol={onLockSymbol} />;
+                return <SubstitutionEditCharPair key={index} index={index} symbol={symbol} letter={letter} isLocked={isLocked} onChange={this.onSubstitutionChange} onShowHintRequest={this.onShowHintRequest} onLockSymbol={this.onLockSymbol} />;
               }
             })}
           </div>
@@ -116,3 +147,54 @@ export class SubstitutionEdit extends React.PureComponent {
     );
   }
 }
+
+function SubstitutionEditSelector (state) {
+  const {requestHint, changeSubstitution, lockSymbol} = state.actions;
+  const {taskData, dump, workspace} = state;
+  const {hints, baseScore, hintCost} = taskData;
+  const {symbolAttrs} = dump;
+  const {substitution} = workspace;
+
+  return {
+    requestHint, changeSubstitution, lockSymbol,
+    hints, baseScore, hintCost,
+    symbolAttrs, substitution
+  };
+}
+
+
+
+/* changeSubstitution {index, letter} updates the user substitution accordingly. */
+function changeSubstitutionReducer (state, action) {
+  let {index, letter} = action;
+  if (letter === '' || isValidLetter(letter)) {
+    const dump = update(state.dump, {
+      symbolAttrs: {[index]: {letter: {$set: letter}}}
+    });
+    return updateWorkspace(state, dump);
+  }
+  return state;
+}
+
+function lockSymbolReducer (state, action) {
+  let {index, value} = action;
+  const dump = update(state.dump, {
+    symbolAttrs: {[index]: {isLocked: {$set: value}}}
+  });
+  return updateWorkspace(state, dump);
+}
+
+
+export default {
+  actions: {
+    changeSubstitution: 'Workspace.ChangeSubstitution',
+    lockSymbol: 'Workspace.LockSymbol',
+  },
+  actionReducers: {
+    changeSubstitution: changeSubstitutionReducer,
+    lockSymbol: lockSymbolReducer,
+  },
+  views: {
+    SubstitutionEdit: connect(SubstitutionEditSelector)(SubstitutionEdit),
+  }
+};
