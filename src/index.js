@@ -1,5 +1,5 @@
 
-import update from '../node_modules/immutability-helper';
+import update from 'immutability-helper';
 import algoreaReactTask from './algorea_react_task';
 import {updateWorkspace, makeDump, initWorkspace} from './utils';
 

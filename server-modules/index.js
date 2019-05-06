@@ -1,15 +1,6 @@
 // var {generate} = require("../bebras-modules/pemFioi/sentences_2");
 var generate = require("./generate");
 
-/**
- * Default constants
- */
-
-/**
- * task module export...
- */
-
-/* prefer JSON config file at project root?  depend on NODE_ENV? */
 module.exports.config = {
   cache_task_data: false
 };
@@ -110,7 +101,6 @@ function generateTaskData (random_seed, hintsRequested, version) {
   const hints = grantHints(decipherSubst, hintsRequested);
   publicData.hints = hints;
   publicData.highestPossibleScore = getHighestPossibleScore(publicData);
-  console.log('decipherSubst :', decipherSubst.join(', '));
   return {publicData, privateData};
 }
 
