@@ -82,7 +82,7 @@ function getTaskAnswer (state) {
   };
 }
 
-function taskAnswerLoaded (state, {payload: {symbolAttrs}}) {
+function taskAnswerLoaded (state, {payload: {answer: {symbolAttrs}}}) {
   return updateWorkspace(update(state, {dump: {symbolAttrs: {$set: symbolAttrs}}}));
 }
 
